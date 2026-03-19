@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Lợi ích AI/ChatGPT</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&amp;family=Open+Sans:wght@400;600&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            display: flex;
+            position: relative;
+            background-color: #1e293b;
+            color: white;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform-origin: center center;
+        }
+
+        /* Simulated Gradient via Shapes - No CSS Gradients allowed */
+        .bg-shape-1 {
+            position: absolute;
+            top: -250px;
+            right: -250px;
+            width: 900px;
+            height: 900px;
+            background-color: #065f46;
+            /* Emerald 800 */
+            filter: blur(80px);
+            border-radius: 50%;
+            opacity: 0.2;
+            z-index: 0;
+            filter: blur(80px);
+        }
+
+        .bg-shape-2 {
+            position: absolute;
+            bottom: -200px;
+            left: -200px;
+            width: 800px;
+            height: 800px;
+            background-color: #064e3b;
+            /* Emerald 900 */
+            filter: blur(80px);
+            border-radius: 50%;
+            opacity: 0.6;
+            z-index: 0;
+            filter: blur(60px);
+        }
+
+        .bg-decoration-circle {
+            position: absolute;
+            top: 20%;
+            left: 5%;
+            width: 50px;
+            height: 50px;
+            border: 4px solid #34d399;
+            /* Emerald 400 */
+            border-radius: 50%;
+            opacity: 0.2;
+            z-index: 1;
+        }
+
+        .bg-decoration-square {
+            position: absolute;
+            bottom: 15%;
+            right: 8%;
+            width: 80px;
+            height: 80px;
+            border: 4px solid #6ee7b7;
+            /* Emerald 300 */
+            border-radius: 12px;
+            opacity: 0.15;
+            transform: rotate(15deg);
+            z-index: 1;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            z-index: 10;
+        }
+
+        /* Header Styling */
+        .header-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 50px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 20px;
+        }
+
+        .title-icon {
+            font-size: 64px;
+            color: #34d399;
+            /* Emerald 400 */
+            margin-right: 30px;
+            background-color: rgba(255, 255, 255, 0.05);
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Benefits Card Container */
+        .benefits-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            height: 100%;
+        }
+
+        .benefit-card {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Card variations for subtle differences */
+        .card-1 {
+            border-top: 8px solid #34d399;
+        }
+
+        .card-2 {
+            border-top: 8px solid #6ee7b7;
+            margin-top: 20px;
+        }
+
+        /* Staggered */
+        .card-3 {
+            border-top: 8px solid #10b981;
+            margin-top: 40px;
+        }
+
+        /* Staggered */
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: rgba(52, 211, 153, 0.2);
+            color: #34d399;
+            /* Emerald 600 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .check-mark {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 24px;
+            height: 24px;
+            background-color: #34d399;
+            border-radius: 50%;
+            color: #064e3b;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container">
+        <!-- Background Elements -->
+        <div class="bg-shape-1"></div>
+        <div class="bg-shape-2"></div>
+        <div class="bg-decoration-circle"></div>
+        <div class="bg-decoration-square"></div>
+        <!-- Main Content -->
+        <div class="content-wrapper">
+            <!-- Header -->
+            <div class="header-section">
+                <div class="title-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <h1
+                        class="font-montserrat font-black text-6xl text-white tracking-tight mb-2 uppercase drop-shadow-lg">
+                        AI/ChatGPT Hỗ trợ
+                    </h1>
+                    <p class="font-open-sans text-xl text-emerald-200 font-semibold tracking-wide">
+                        Thúc đẩy quá trình chuyển đổi
+                    </p>
+                </div>
+            </div>
+            <!-- Benefits Cards -->
+            <div class="benefits-container">
+                <!-- Card 1: Giải thích Khái niệm -->
+                <div class="benefit-card card-1">
+                    <div class="card-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h2 class="font-montserrat font-bold text-2xl text-white mb-4">Tiếp cận công nghệ mới</h2>
+                    <p class="font-open-sans text-lg text-emerald-100 leading-relaxed">
+                        Sử dụng AI để học ngôn ngữ mới theo dạng Concept Mapping
+                    </p>
+                    <div class="mt-auto pt-4 w-full">
+                        <p class="text-sm font-mono bg-black bg-opacity-20 py-2 px-3 rounded text-emerald-300">
+                            <i class="fas fa-check mr-2"></i>Concept Mapping
+                        </p>
+                    </div>
+                </div>
+                <!-- Card 2: Chuyển đổi Code -->
+                <div class="benefit-card card-2">
+                    <div class="card-icon">
+                        <i class="fas fa-code-branch"></i>
+                    </div>
+                    <h2 class="font-montserrat font-bold text-2xl text-white mb-4">Thực hiện tính năng</h2>
+                    <p class="font-open-sans text-lg text-emerald-100 leading-relaxed">
+                        Tự động hoàn thành các công việc cơ bản như CRUD
+                    </p>
+                    <div class="mt-auto pt-4 w-full">
+                        <p class="text-sm font-mono bg-black bg-opacity-20 py-2 px-3 rounded text-emerald-300">
+                            <i class="fas fa-check mr-2"></i>Junior Task
+                        </p>
+                    </div>
+                </div>
+                <!-- Card 3: Debug Fast -->
+                <div class="benefit-card card-3">
+                    <div class="card-icon">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h2 class="font-montserrat font-bold text-2xl text-white mb-4">Debug Nhanh</h2>
+                    <p class="font-open-sans text-lg text-emerald-100 leading-relaxed">
+                        Giúp mình định nghĩa được log lỗi đó thuộc nhóm nào
+                    </p>
+                    <div class="mt-auto pt-4 w-full">
+                        <p class="text-sm font-mono bg-black bg-opacity-20 py-2 px-3 rounded text-emerald-300">
+                            <i class="fas fa-check mr-2"></i>Định dạng và đề xuất
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation script and styling added automatically -->
+    <style>
+        .nav-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            color: inherit;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn i {
+            font-size: 14px;
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Handle light background slides by darkening buttons slightly */
+        .content-wrapper>.text-white,
+        body[style*="f1f5f9"] .nav-btn,
+        body[style*="f8fafc"] .nav-btn,
+        .bg-slate-50 .nav-btn {
+            background-color: rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: #1e293b;
+        }
+
+        .content-wrapper>.text-white:hover,
+        body[style*="f1f5f9"] .nav-btn:hover,
+        body[style*="f8fafc"] .nav-btn:hover,
+        .bg-slate-50 .nav-btn:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+    </style>
+    <div class="nav-buttons">
+        <button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i> Trước</button>
+        <button id="nextBtn" class="nav-btn">Tiếp <i class="fas fa-chevron-right"></i></button>
+    </div>
+    <script>
+        const slides = ["index.html", "slide1.html", "slide2.html", "slide3.html", "slide4.html", "slide5.html", "slide6.html", "slide7.html", "slide8.html", "slide9.html", "slide10.html", "slide12.html", "slide13.html", "slide14.html", "slide15.html"];
+        let currentFile = window.location.pathname.split('/').pop();
+        if (!currentFile) currentFile = "index.html";
+        let currentIndex = slides.indexOf(currentFile);
+
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        if (currentIndex <= 0) prevBtn.disabled = true;
+        if (currentIndex >= slides.length - 1 || currentIndex === -1) nextBtn.disabled = true;
+
+        prevBtn.addEventListener("click", () => {
+            if (currentIndex > 0) window.location.href = slides[currentIndex - 1];
+        });
+
+        nextBtn.addEventListener("click", () => {
+            if (currentIndex > -1 && currentIndex < slides.length - 1) window.location.href = slides[currentIndex + 1];
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft" && currentIndex > 0) {
+                window.location.href = slides[currentIndex - 1];
+            } else if (e.key === "ArrowRight" && currentIndex > -1 && currentIndex < slides.length - 1) {
+                window.location.href = slides[currentIndex + 1];
+            }
+        });
+
+        function resizeSlide() {
+            const container = document.querySelector('.slide-container');
+            if (container) {
+                const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+                container.style.transform = `scale(${scale})`;
+            }
+        }
+        window.addEventListener('resize', resizeSlide);
+        resizeSlide();
+    </script>
+</body>
+
+</html>

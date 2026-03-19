@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Nền tảng Python & Go</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&amp;family=Open+Sans:wght@400;600;700&amp;family=Fira+Code:wght@500&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform-origin: center center;
+        }
+
+        /* Column Styling */
+        .col-left {
+            flex: 1;
+            background-color: #172554;
+            /* Blue 950 */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            overflow: hidden;
+        }
+
+        .col-right {
+            flex: 1;
+            background-color: #134e4a;
+            /* Teal 900 */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            overflow: hidden;
+        }
+
+        /* Background Decorations (No Gradients) */
+        .circle-deco {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        /* Left Side Decos */
+        .deco-blue-1 {
+            width: 600px;
+            height: 600px;
+            background-color: #38bdf8;
+            /* Sky 400 */
+            top: -200px;
+            left: -200px;
+        }
+
+        .deco-blue-2 {
+            width: 300px;
+            height: 300px;
+            background-color: #0284c7;
+            /* Sky 600 */
+            bottom: -50px;
+            right: -50px;
+        }
+
+        /* Right Side Decos */
+        .deco-green-1 {
+            width: 600px;
+            height: 600px;
+            background-color: #34d399;
+            /* Emerald 400 */
+            bottom: -200px;
+            right: -200px;
+        }
+
+        .deco-green-2 {
+            width: 300px;
+            height: 300px;
+            background-color: #10b981;
+            /* Emerald 500 */
+            top: -50px;
+            left: -50px;
+        }
+
+        /* VS Badge */
+        .vs-badge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.1);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            color: #ffffff;
+        }
+
+        /* Content Styling */
+        .content-box {
+            z-index: 10;
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .lang-icon-wrapper {
+            width: 120px;
+            height: 120px;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 30px;
+            font-size: 70px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-card {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 24px;
+            border-left: 6px solid;
+            text-align: left;
+        }
+
+        .code-snippet {
+            font-family: 'Fira Code', monospace;
+            font-size: 16px;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .feature-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .bullet-point {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-top: 10px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container">
+        <!-- VS Badge Center -->
+        <div class="vs-badge">VS</div>
+        <!-- Left Column: Python -->
+        <div class="col-left">
+            <div class="circle-deco deco-blue-1"></div>
+            <div class="circle-deco deco-blue-2"></div>
+            <div class="content-box">
+                <div class="lang-icon-wrapper text-yellow-400">
+                    <i class="fab fa-python"></i>
+                </div>
+                <h2 class="font-montserrat font-bold text-5xl text-white mb-2">Python</h2>
+                <p class="font-open-sans text-xl text-blue-200 mb-8 font-semibold">Mô hình Xử lý đồng thời (Concurrency)
+                </p>
+                <div class="feature-card" style="border-left-color: #3b82f6;">
+                    <div class="feature-item">
+                        <div class="bullet-point bg-blue-400"></div>
+                        <div>
+                            <p class="font-montserrat font-bold text-2xl text-white mb-1">Async / Await</p>
+                            <p class="font-open-sans text-blue-100 text-sm mb-2">Đa nhiệm hợp tác trên một thread duy
+                                nhất.</p>
+                            <span class="code-snippet text-yellow-300">async def process():</span>
+                        </div>
+                    </div>
+                    <div class="mt-6 feature-item">
+                        <div class="bullet-point bg-red-400"></div>
+                        <div>
+                            <p class="font-montserrat font-bold text-2xl text-white mb-1">
+                                <i class="fas fa-lock mr-2 text-sm text-red-400"></i>GIL
+                            </p>
+                            <p class="font-open-sans text-blue-100 text-sm mb-2">GIL hạn chế các tác vụ đòi hỏi CPU cao.
+                            </p>
+                            <span class="code-snippet text-red-200">threading.Khóa (Lock)()</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Right Column: Go -->
+        <div class="col-right">
+            <div class="circle-deco deco-green-1"></div>
+            <div class="circle-deco deco-green-2"></div>
+            <div class="content-box">
+                <div class="lang-icon-wrapper text-emerald-300">
+                    <i class="fab fa-golang"></i>
+                </div>
+                <h2 class="font-montserrat font-bold text-5xl text-white mb-2">Go</h2>
+                <p class="font-open-sans text-xl text-emerald-200 mb-8 font-semibold">Mô hình Xử lý đồng thời
+                    (Concurrency)</p>
+                <div class="feature-card" style="border-left-color: #10b981;">
+                    <div class="feature-item">
+                        <div class="bullet-point bg-emerald-400"></div>
+                        <div>
+                            <p class="font-montserrat font-bold text-2xl text-white mb-1">Goroutine</p>
+                            <p class="font-open-sans text-emerald-100 text-sm mb-2">Thread nhẹ được Go runtime quản lý
+                                tối ưu.</p>
+                            <span class="code-snippet text-emerald-300">go func() { ... }</span>
+                        </div>
+                    </div>
+                    <div class="mt-6 feature-item">
+                        <div class="bullet-point bg-teal-400"></div>
+                        <div>
+                            <p class="font-montserrat font-bold text-2xl text-white mb-1">
+                                <i class="fas fa-exchange-alt mr-2 text-sm text-teal-400"></i>Channel
+                            </p>
+                            <p class="font-open-sans text-emerald-100 text-sm mb-2">Giao tiếp an toàn thay vì dùng thead
+                                locks thông thường.</p>
+                            <span class="code-snippet text-teal-200">ch &lt;- data</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation script and styling added automatically -->
+    <style>
+        .nav-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            color: inherit;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn i {
+            font-size: 14px;
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Handle light background slides by darkening buttons slightly */
+        .content-wrapper>.text-white,
+        body[style*="f1f5f9"] .nav-btn,
+        body[style*="f8fafc"] .nav-btn,
+        .bg-slate-50 .nav-btn {
+            background-color: rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: #1e293b;
+        }
+
+        .content-wrapper>.text-white:hover,
+        body[style*="f1f5f9"] .nav-btn:hover,
+        body[style*="f8fafc"] .nav-btn:hover,
+        .bg-slate-50 .nav-btn:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+    </style>
+    <div class="nav-buttons">
+        <button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i> Trước</button>
+        <button id="nextBtn" class="nav-btn">Tiếp <i class="fas fa-chevron-right"></i></button>
+    </div>
+    <script>
+        const slides = ["index.html", "slide1.html", "slide2.html", "slide3.html", "slide4.html", "slide5.html", "slide6.html", "slide7.html", "slide8.html", "slide9.html", "slide10.html", "slide12.html", "slide13.html", "slide14.html", "slide15.html"];
+        let currentFile = window.location.pathname.split('/').pop();
+        if (!currentFile) currentFile = "index.html";
+        let currentIndex = slides.indexOf(currentFile);
+
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        if (currentIndex <= 0) prevBtn.disabled = true;
+        if (currentIndex >= slides.length - 1 || currentIndex === -1) nextBtn.disabled = true;
+
+        prevBtn.addEventListener("click", () => {
+            if (currentIndex > 0) window.location.href = slides[currentIndex - 1];
+        });
+
+        nextBtn.addEventListener("click", () => {
+            if (currentIndex > -1 && currentIndex < slides.length - 1) window.location.href = slides[currentIndex + 1];
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft" && currentIndex > 0) {
+                window.location.href = slides[currentIndex - 1];
+            } else if (e.key === "ArrowRight" && currentIndex > -1 && currentIndex < slides.length - 1) {
+                window.location.href = slides[currentIndex + 1];
+            }
+        });
+
+        function resizeSlide() {
+            const container = document.querySelector('.slide-container');
+            if (container) {
+                const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+                container.style.transform = `scale(${scale})`;
+            }
+        }
+        window.addEventListener('resize', resizeSlide);
+        resizeSlide();
+    </script>
+</body>
+
+</html>

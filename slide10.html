@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>OLTP vs OLAP</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&display=swap"
+        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            display: flex;
+            position: relative;
+            background-color: #1e293b;
+            color: white;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform-origin: center center;
+            flex-direction: column;
+        }
+
+        /* Decorative Background Shapes */
+        .bg-shape-1 {
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 600px;
+            height: 600px;
+            background-color: #1d4ed8;
+            /* Blue 700 for OLTP */
+            filter: blur(120px);
+            border-radius: 50%;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .bg-shape-2 {
+            position: absolute;
+            bottom: -100px;
+            right: -100px;
+            width: 600px;
+            height: 600px;
+            background-color: #d97706;
+            /* Amber 600 for OLAP */
+            filter: blur(120px);
+            border-radius: 50%;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            z-index: 10;
+            height: 100%;
+        }
+
+        .header-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+        }
+
+        .defs-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        .def-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 20px 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .def-card.oltp {
+            border-top: 4px solid #3b82f6;
+            /* Blue 500 */
+            box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.15);
+        }
+
+        .def-card.olap {
+            border-top: 4px solid #f59e0b;
+            /* Amber 500 */
+            box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.15);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr 1fr;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            flex: 1;
+        }
+
+        .grid-header {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .header-criteria {
+            background: transparent;
+            color: #94a3b8;
+            text-align: left;
+            justify-content: flex-start;
+        }
+
+        .header-oltp {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border-bottom: 2px solid #3b82f6;
+        }
+
+        .header-olap {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border-bottom: 2px solid #f59e0b;
+        }
+
+        .grid-cell {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            font-size: 17px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.02);
+            transition: background 0.2s;
+        }
+
+        .grid-cell:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .cell-criteria {
+            font-weight: 600;
+            color: #cbd5e1;
+            justify-content: flex-end;
+            text-align: right;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            background: transparent;
+        }
+
+        .cell-oltp {
+            color: #bfdbfe;
+            justify-content: flex-start;
+        }
+
+        .cell-olap {
+            color: #fef3c7;
+            justify-content: flex-start;
+        }
+
+        /* Icon pills in grid */
+        .grid-icon {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .icon-oltp {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        .icon-olap {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        /* Highlight Note */
+        .highlight-note {
+            margin-top: 20px;
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border-left: 4px solid #10b981;
+            padding: 12px 24px;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Nav buttons */
+        .nav-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            color: inherit;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container">
+        <!-- Background Elements -->
+        <div class="bg-shape-1"></div>
+        <div class="bg-shape-2"></div>
+
+        <!-- Main Content -->
+        <div class="content-wrapper">
+            <div class="header-section">
+                <div>
+                    <h1
+                        class="font-montserrat font-black text-6xl text-white tracking-tight mb-2 uppercase drop-shadow-md">
+                        OLTP <span class="text-slate-500 mx-2">vs</span> OLAP
+                    </h1>
+                    <p class="font-open-sans text-xl text-slate-300 font-semibold tracking-wide">
+                        Phân biệt 2 luồng kiến trúc cơ sở dữ liệu phổ biến
+                    </p>
+                </div>
+            </div>
+
+            <!-- Definitions -->
+            <div class="defs-container">
+                <div class="def-card oltp">
+                    <h3 class="text-xl font-bold text-blue-400 mb-2 flex items-center gap-2">
+                        <i class="fas fa-exchange-alt"></i> OLTP
+                        <span class="text-xs text-blue-300/60 font-medium tracking-widest ml-auto">(Online Transaction
+                            Processing)</span>
+                    </h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Hệ thống xử lý giao dịch. Tối ưu cho việc <strong>Ghi / Đọc nhanh</strong> các giao dịch nhỏ lẻ,
+                        liên tục. Đảm bảo tính nhất quán (ACID) tuyệt đối cho hệ thống vận hành lõi (Core Business).
+                    </p>
+                </div>
+                <div class="def-card olap">
+                    <h3 class="text-xl font-bold text-amber-500 mb-2 flex items-center gap-2">
+                        <i class="fas fa-chart-line"></i> OLAP
+                        <span class="text-xs text-amber-300/60 font-medium tracking-widest ml-auto">(Online Analytical
+                            Processing)</span>
+                    </h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Hệ thống xử lý phân tích. Tối ưu cho việc <strong>Tổng hợp / Truy vấn</strong> tập dữ liệu khổng
+                        lồ phục vụ báo cáo, phân tích số liệu (Analytics) trong thời gian siêu tốc.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Comparison Table -->
+            <div class="comparison-grid">
+                <!-- Headers -->
+                <div class="grid-header header-criteria">Tiêu chí</div>
+                <div class="grid-header header-oltp"><i class="fas fa-database"></i> OLTP</div>
+                <div class="grid-header header-olap"><i class="fas fa-bolt"></i> OLAP</div>
+
+                <!-- Row 1 -->
+                <div class="grid-cell cell-criteria">Hệ quản trị tiêu biểu</div>
+                <div class="grid-cell cell-oltp font-mono text-sm">
+                    <span class="grid-icon icon-oltp"><i class="fas fa-cube"></i></span> MySQL, Postgres
+                </div>
+                <div class="grid-cell cell-olap font-mono text-sm">
+                    <span class="grid-icon icon-olap"><i class="fas fa-star"></i></span> ClickHouse
+                </div>
+
+                <!-- Row 2 -->
+                <div class="grid-cell cell-criteria">Luồng ghi dữ liệu (Write)</div>
+                <div class="grid-cell cell-oltp">
+                    <span class="grid-icon icon-oltp"><i class="fas fa-pen"></i></span> Ghi nhiều bản ghi nhỏ lẻ
+                </div>
+                <div class="grid-cell cell-olap">
+                    <span class="grid-icon icon-olap"><i class="fas fa-truck-loading"></i></span> Batch insert lớn định
+                    kỳ/real-time
+                </div>
+
+                <!-- Row 3 -->
+                <div class="grid-cell cell-criteria">Cách truy vấn (Query)</div>
+                <div class="grid-cell cell-oltp">
+                    <span class="grid-icon icon-oltp"><i class="fas fa-table"></i></span> Lấy dữ liệu theo dòng (Row)
+                </div>
+                <div class="grid-cell cell-olap">
+                    <span class="grid-icon icon-olap"><i class="fas fa-columns"></i></span> Quét & Tổng hợp theo cột
+                    (Column)
+                </div>
+
+                <!-- Row 4 -->
+                <div class="grid-cell cell-criteria">Mục đích chính</div>
+                <div class="grid-cell cell-oltp">
+                    <span class="grid-icon icon-oltp"><i class="fas fa-shopping-cart"></i></span> Xử lý Giao dịch
+                    (Transaction)
+                </div>
+                <div class="grid-cell cell-olap">
+                    <span class="grid-icon icon-olap"><i class="fas fa-chart-pie"></i></span> Phân tích (Analytics)
+                </div>
+            </div>
+
+            <!-- Conclusion Note -->
+            <div class="highlight-note">
+                <i class="fas fa-info-circle text-emerald-400 text-3xl"></i>
+                <div>
+                    <h4 class="font-bold text-white text-lg">Lưu ý quan trọng: Đi cùng nhau, không thay thế</h4>
+                    <p class="text-emerald-50 text-base">
+                        ClickHouse <strong>không thay thế MySQL</strong>. Trong khối kiến trúc hiện đại, OLTP (MySQL)
+                        giữ vai trò vận hành, còn OLAP (ClickHouse) đóng vai trò bổ sung chuyên biệt để xử lý Logging &
+                        Analytics.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i> Trước</button>
+            <button id="nextBtn" class="nav-btn">Tiếp <i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <script>
+        const slides = [
+            "index.html", "slide1.html", "slide2.html", "slide3.html", "slide4.html",
+            "slide5.html", "slide6.html", "slide7.html", "slide8.html", "slide9.html",
+            "slide10.html", "slide11.html", "slide13.html", "slide14.html"
+        ];
+        let currentFile = window.location.pathname.split('/').pop();
+        if (!currentFile) currentFile = "index.html";
+        let currentIndex = slides.indexOf(currentFile);
+
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        if (currentIndex <= 0) prevBtn.disabled = true;
+        if (currentIndex >= slides.length - 1 || currentIndex === -1) nextBtn.disabled = true;
+
+        prevBtn.addEventListener("click", () => {
+            if (currentIndex > 0) window.location.href = slides[currentIndex - 1];
+        });
+
+        nextBtn.addEventListener("click", () => {
+            if (currentIndex > -1 && currentIndex < slides.length - 1) window.location.href = slides[currentIndex + 1];
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft" && currentIndex > 0) {
+                window.location.href = slides[currentIndex - 1];
+            } else if (e.key === "ArrowRight" && currentIndex > -1 && currentIndex < slides.length - 1) {
+                window.location.href = slides[currentIndex + 1];
+            }
+        });
+
+        function resizeSlide() {
+            const container = document.querySelector('.slide-container');
+            if (container) {
+                const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+                container.style.transform = `scale(${scale})`;
+            }
+        }
+        window.addEventListener('resize', resizeSlide);
+        resizeSlide();
+    </script>
+</body>
+
+</html>

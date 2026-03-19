@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Python to Go Mapping Khái niệm</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&amp;family=Open+Sans:wght@400;600&amp;family=Roboto+Mono:wght@400;500&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            display: flex;
+            position: relative;
+            background-color: #1e293b;
+            color: white;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform-origin: center center;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        /* Header Styling */
+        .slide-header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+        }
+
+        .slide-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 60px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        /* Scrollable List Area */
+        .mapping-scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 20px;
+            /* Custom Scrollbar */
+        }
+
+        .mapping-scroll-area::-webkit-scrollbar {
+            width: 8px;
+        }
+        .mapping-scroll-area::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        .mapping-scroll-area::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 10px;
+        }
+
+        /* Mapping Row Labels */
+        .mapping-row {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: 250px 1fr 1fr;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s;
+        }
+        .mapping-row:hover {
+            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .concept-label {
+            font-weight: 600;
+            color: #94a3b8;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .code-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .py-pill {
+            color: #fef08a;
+            background-color: rgba(250, 204, 21, 0.1);
+            border: 1px solid rgba(250, 204, 21, 0.25);
+        }
+
+        .go-pill {
+            color: #93c5fd;
+            background-color: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+        }
+
+        .pill-label {
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-right: 8px;
+            opacity: 0.6;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="slide-container">
+        <div class="content-wrapper">
+            <div class="slide-header">
+                <h1>Mapping Khái niệm</h1>
+                <p class="text-slate-400 font-semibold italic text-lg opacity-80 mt-1">
+                    <i class="fas fa-random mr-2"></i> Python Legacy sang Golang Target
+                </p>
+            </div>
+
+            <div class="mapping-scroll-area">
+                <!-- Data Row 1 -->
+                <div class="mapping-row">
+                    <div class="concept-label">Đồng thời</div>
+                    <div><span class="code-pill py-pill"><span class="pill-label">PY</span>async / await</span></div>
+                    <div><span class="code-pill go-pill"><span class="pill-label">GO</span>goroutine</span></div>
+                </div>
+
+                <!-- Data Row 2 -->
+                <div class="mapping-row">
+                    <div class="concept-label">Giao tiếp</div>
+                    <div><span class="code-pill py-pill"><span class="pill-label">PY</span>asyncio.Queue</span></div>
+                    <div><span class="code-pill go-pill"><span class="pill-label">GO</span>channel</span></div>
+                </div>
+
+                <!-- Data Row 3 -->
+                <div class="mapping-row">
+                    <div class="concept-label">Worker / Luồng</div>
+                    <div><span class="code-pill py-pill"><span class="pill-label">PY</span>queue + worker loop</span></div>
+                    <div><span class="code-pill go-pill"><span class="pill-label">GO</span>goroutine pool</span></div>
+                </div>
+
+                <!-- Data Row 4 -->
+                <div class="mapping-row">
+                    <div class="concept-label">Khóa / Lock</div>
+                    <div><span class="code-pill py-pill"><span class="pill-label">PY</span>threading.Lock</span></div>
+                    <div><span class="code-pill go-pill"><span class="pill-label">GO</span>sync.Mutex</span></div>
+                </div>
+
+                <!-- Data Row 5 -->
+                <div class="mapping-row">
+                    <div class="concept-label">Thời gian chờ</div>
+                    <div><span class="code-pill py-pill"><span class="pill-label">PY</span>asyncio.wait_for</span></div>
+                    <div><span class="code-pill go-pill"><span class="pill-label">GO</span>context.WithTimeout</span></div>
+                </div>
+
+                <!-- Data Row 6 -->
+                <div class="mapping-row">
+                    <div class="concept-label">Mô hình dữ liệu</div>
+                    <div><span class="code-pill py-pill"><span class="pill-label">PY</span>dict / class</span></div>
+                    <div><span class="code-pill go-pill"><span class="pill-label">GO</span>struct</span></div>
+                </div>
+
+                <!-- Data Row 7 -->
+                <div class="mapping-row">
+                    <div class="concept-label">Xử lý Lỗi</div>
+                    <div><span class="code-pill py-pill"><span class="pill-label">PY</span>try / except</span></div>
+                    <div><span class="code-pill go-pill"><span class="pill-label">GO</span>error return</span></div>
+                </div>
+
+                <!-- Data Row 8 -->
+                <div class="mapping-row">
+                    <div class="concept-label">Framework HTTP</div>
+                    <div><span class="code-pill py-pill"><span class="pill-label">PY</span>FastAPI / Flask</span></div>
+                    <div><span class="code-pill go-pill"><span class="pill-label">GO</span>Gin / Net/Http</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation script and styling added automatically -->
+    <style>
+        .nav-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+        .nav-btn {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <div class="nav-buttons">
+        <button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i> Trước</button>
+        <button id="nextBtn" class="nav-btn">Tiếp <i class="fas fa-chevron-right"></i></button>
+    </div>
+    <script>
+        const slides = ["index.html", "slide1.html", "slide2.html", "slide3.html", "slide4.html", "slide5.html", "slide6.html", "slide7.html", "slide8.html", "slide9.html", "slide10.html", "slide12.html", "slide13.html", "slide14.html", "slide15.html"];
+        let currentFile = window.location.pathname.split('/').pop();
+        if (!currentFile) currentFile = "index.html";
+        let currentIndex = slides.indexOf(currentFile);
+        
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        
+        if (currentIndex <= 0) prevBtn.disabled = true;
+        if (currentIndex >= slides.length - 1 || currentIndex === -1) nextBtn.disabled = true;
+        
+        prevBtn.addEventListener("click", () => {
+            if (currentIndex > 0) window.location.href = slides[currentIndex - 1];
+        });
+        
+        nextBtn.addEventListener("click", () => {
+            if (currentIndex > -1 && currentIndex < slides.length - 1) window.location.href = slides[currentIndex + 1];
+        });
+        
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft" && currentIndex > 0) {
+                window.location.href = slides[currentIndex - 1];
+            } else if (e.key === "ArrowRight" && currentIndex > -1 && currentIndex < slides.length - 1) {
+                window.location.href = slides[currentIndex + 1];
+            }
+        });
+
+        function resizeSlide() {
+            const container = document.querySelector('.slide-container');
+            if (container) {
+                const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+                container.style.transform = `scale(${scale})`;
+            }
+        }
+        window.addEventListener('resize', resizeSlide);
+        resizeSlide();
+    </script>
+</body>
+
+</html>

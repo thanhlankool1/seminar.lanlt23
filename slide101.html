@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Tích hợp ClickHouse</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&amp;family=Open+Sans:wght@400;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            display: flex;
+            position: relative;
+            background-color: #1e293b;
+            color: white;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform-origin: center center;
+        }
+
+        /* Simulated Gradient via Shapes - No CSS Gradients allowed */
+        .bg-shape-1 {
+            position: absolute;
+            top: -300px;
+            right: -200px;
+            width: 900px;
+            height: 900px;
+            background-color: #059669;
+            /* Amber 600 */
+            border-radius: 50%;
+            opacity: 0.4;
+            z-index: 0;
+            filter: blur(80px);
+        }
+
+        .bg-shape-2 {
+            position: absolute;
+            bottom: -200px;
+            left: -100px;
+            width: 700px;
+            height: 700px;
+            background-color: #047857;
+            /* Amber 700 */
+            border-radius: 50%;
+            opacity: 0.6;
+            z-index: 0;
+            filter: blur(60px);
+        }
+
+        .bg-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        /* Decorative Data Bars */
+        .deco-bar {
+            position: absolute;
+            background-color: #34d399;
+            /* Amber 400 */
+            opacity: 0.2;
+            border-radius: 4px;
+            z-index: 1;
+        }
+
+        .deco-bar-1 {
+            bottom: 100px;
+            right: 50px;
+            width: 40px;
+            height: 100px;
+        }
+
+        .deco-bar-2 {
+            bottom: 100px;
+            right: 100px;
+            width: 40px;
+            height: 160px;
+        }
+
+        .deco-bar-3 {
+            bottom: 100px;
+            right: 150px;
+            width: 40px;
+            height: 80px;
+        }
+
+        .deco-bar-4 {
+            bottom: 100px;
+            right: 200px;
+            width: 40px;
+            height: 200px;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 50px 80px;
+            z-index: 10;
+        }
+
+        /* Header Styling */
+        .header-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .header-line {
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .header-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 150px;
+            height: 100%;
+            background-color: #34d399;
+            /* Amber 400 */
+        }
+
+        .title-icon {
+            font-size: 56px;
+            color: #34d399;
+            /* Amber 400 */
+            margin-right: 25px;
+            background-color: rgba(0, 0, 0, 0.3);
+            width: 90px;
+            height: 90px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Content Layout */
+        .main-content {
+            display: flex;
+            gap: 40px;
+            height: 100%;
+            align-items: stretch;
+        }
+
+        .feature-box {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background-color: #10b981;
+            /* Amber 500 */
+        }
+
+        .box-icon {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(52, 211, 153, 0.2);
+            /* Amber tint */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            color: #34d399;
+            /* Amber 400 */
+            margin-bottom: 24px;
+        }
+
+        .tech-pill {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            font-family: 'Open Sans', sans-serif;
+            /* Changed from monospace for better readability */
+            font-size: 14px;
+            color: #6ee7b7;
+            /* Amber 300 */
+            margin-right: 8px;
+            margin-top: auto;
+            border: 1px solid rgba(52, 211, 153, 0.2);
+        }
+
+        .stat-highlight {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 48px;
+            color: white;
+            line-height: 1;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #34d399;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container">
+        <!-- Background Elements -->
+        <div class="bg-shape-1"></div>
+        <div class="bg-shape-2"></div>
+        <div class="bg-grid"></div>
+        <!-- Decorative Bars representing Analytics -->
+        <div class="deco-bar deco-bar-1"></div>
+        <div class="deco-bar deco-bar-2"></div>
+        <div class="deco-bar deco-bar-3"></div>
+        <div class="deco-bar deco-bar-4"></div>
+        <!-- Main Content -->
+        <div class="content-wrapper">
+            <!-- Header -->
+            <div class="header-section">
+                <div class="title-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div>
+                    <h1
+                        class="font-montserrat font-black text-6xl text-white tracking-tight mb-1 uppercase drop-shadow-lg">
+                        Tích hợp ClickHouse
+                    </h1>
+                    <p class="font-open-sans text-xl text-emerald-200 font-semibold tracking-wide">
+                        High-Performance OLAP for Lưu lượng Analytics
+                    </p>
+                </div>
+                <div class="header-line"></div>
+            </div>
+            <!-- Main Features -->
+            <div class="main-content">
+                <!-- Left Box: Insert -->
+                <div class="feature-box">
+                    <div class="flex justify-between items-start">
+                        <div class="box-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="text-right">
+                            <p class="stat-highlight">Insert</p>
+                            <p class="stat-label">Nhanh</p>
+                        </div>
+                    </div>
+                    <h2 class="font-montserrat font-bold text-3xl text-white mb-4">Ingestion Siêu Nhanh</h2>
+                    <p class="font-open-sans text-lg text-emerald-50 leading-relaxed mb-6">
+                        Tối ưu các đợt lưu Data lớn: Nạp hàng triệu record mà méo khoá read logic.
+                    </p>
+                    <div class="mt-auto">
+                        <p class="mb-2 text-sm text-emerald-200 font-semibold uppercase tracking-wider">Công Nghệ Ứng Dụng:
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="tech-pill"><i class="fas fa-layer-group mr-2"></i>LSM Tree</span>
+                            <span class="tech-pill"><i class="fas fa-box-open mr-2"></i>Ghi Lô</span>
+                            <span class="tech-pill"><i class="fas fa-compress-arrows-alt mr-2"></i>LZ4
+                                Nén Dữ Liệu</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Box: Aggregation -->
+                <div class="feature-box">
+                    <div class="flex justify-between items-start">
+                        <div class="box-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="text-right">
+                            <p class="stat-highlight">Query</p>
+                            <p class="stat-label">Mạnh</p>
+                        </div>
+                    </div>
+                    <h2 class="font-montserrat font-bold text-3xl text-white mb-4">Aggregation Mạnh Mẽ</h2>
+                    <p class="font-open-sans text-lg text-emerald-50 leading-relaxed mb-6">
+                        Kiến trúc dữ liệu Columnar giúp đẩy query phân tích thời gian thực và tổng hợp cực căng ngay tức thì.
+                    </p>
+                    <div class="mt-auto">
+                        <p class="mb-2 text-sm text-emerald-200 font-semibold uppercase tracking-wider">Công Nghệ Ứng Dụng:
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="tech-pill"><i class="fas fa-columns mr-2"></i>Kho Columnar</span>
+                            <span class="tech-pill"><i class="fas fa-microchip mr-2"></i>Tính Vector</span>
+                            <span class="tech-pill"><i class="fas fa-project-diagram mr-2"></i>View Ảo (Materialized)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation script and styling added automatically -->
+    <style>
+        .nav-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            color: inherit;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-btn i {
+            font-size: 14px;
+        }
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        /* Handle light background slides by darkening buttons slightly */
+        .content-wrapper > .text-white, body[style*="f1f5f9"] .nav-btn, body[style*="f8fafc"] .nav-btn, .bg-slate-50 .nav-btn {
+            background-color: rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: #1e293b;
+        }
+        .content-wrapper > .text-white:hover, body[style*="f1f5f9"] .nav-btn:hover, body[style*="f8fafc"] .nav-btn:hover, .bg-slate-50 .nav-btn:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+    </style>
+    <div class="nav-buttons">
+        <button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i> Trước</button>
+        <button id="nextBtn" class="nav-btn">Tiếp <i class="fas fa-chevron-right"></i></button>
+    </div>
+    <script>
+        const slides = ["index.html", "slide1.html", "slide2.html", "slide3.html", "slide4.html", "slide5.html", "slide6.html", "slide7.html", "slide8.html", "slide9.html", "slide10.html", "slide12.html", "slide13.html", "slide14.html", "slide15.html"];
+        let currentFile = window.location.pathname.split('/').pop();
+        if(!currentFile) currentFile = "index.html";
+        let currentIndex = slides.indexOf(currentFile);
+        
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        
+        if(currentIndex <= 0) prevBtn.disabled = true;
+        if(currentIndex >= slides.length - 1 || currentIndex === -1) nextBtn.disabled = true;
+        
+        prevBtn.addEventListener("click", () => {
+            if(currentIndex > 0) window.location.href = slides[currentIndex - 1];
+        });
+        
+        nextBtn.addEventListener("click", () => {
+            if(currentIndex > -1 && currentIndex < slides.length - 1) window.location.href = slides[currentIndex + 1];
+        });
+        
+        document.addEventListener("keydown", (e) => {
+            if(e.key === "ArrowLeft" && currentIndex > 0) {
+                window.location.href = slides[currentIndex - 1];
+            } else if (e.key === "ArrowRight" && currentIndex > -1 && currentIndex < slides.length - 1) {
+                window.location.href = slides[currentIndex + 1];
+            }
+        });
+    
+        function resizeSlide() {
+            const container = document.querySelector('.slide-container');
+            if (container) {
+                const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+                container.style.transform = `scale(${scale})`;
+            }
+        }
+        window.addEventListener('resize', resizeSlide);
+        resizeSlide();
+</script>
+</body>
+
+</html>
