@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Q&A - Hỏi & Đáp</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&display=swap"
+        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            display: flex;
+            position: relative;
+            background-color: #1e293b;
+            color: white;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform-origin: center center;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Ambient Shapes for Dark Glassmorphism */
+        .bg-shape-1 {
+            position: absolute;
+            top: -150px;
+            left: -150px;
+            width: 800px;
+            height: 800px;
+            background-color: #8b5cf6;
+            /* Violet */
+            filter: blur(160px);
+            border-radius: 50%;
+            opacity: 0.15;
+            z-index: 0;
+            animation: float1 10s infinite alternate ease-in-out;
+        }
+
+        .bg-shape-2 {
+            position: absolute;
+            bottom: -200px;
+            right: -100px;
+            width: 900px;
+            height: 900px;
+            background-color: #0ea5e9;
+            /* Sky */
+            filter: blur(180px);
+            border-radius: 50%;
+            opacity: 0.15;
+            z-index: 0;
+            animation: float2 12s infinite alternate ease-in-out;
+        }
+
+        .bg-shape-3 {
+            position: absolute;
+            top: 20%;
+            right: 30%;
+            width: 500px;
+            height: 500px;
+            background-color: #f43f5e;
+            /* Rose */
+            filter: blur(150px);
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: 0;
+            animation: float3 15s infinite alternate ease-in-out;
+        }
+
+        @keyframes float1 {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        @keyframes float2 {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(-50px, -30px);
+            }
+        }
+
+        @keyframes float3 {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(-30px, 50px);
+            }
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qa-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 180px;
+            line-height: 1;
+            background: linear-gradient(135deg, #38bdf8 0%, #8b5cf6 50%, #f43f5e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.5));
+            letter-spacing: -2px;
+        }
+
+        .qa-subtitle {
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 600;
+            font-size: 32px;
+            color: #cbd5e1;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .thank-you-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 30px 60px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .thank-you-card i {
+            font-size: 40px;
+            color: #34d399;
+            /* Emerald 400 */
+        }
+
+        .thank-you-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            color: white;
+            text-align: left;
+        }
+
+        .thank-you-sub {
+            font-size: 16px;
+            color: #94a3b8;
+            margin-top: 5px;
+            text-align: left;
+        }
+
+        /* Nav buttons */
+        .nav-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            color: inherit;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container">
+        <!-- Ambient Shapes -->
+        <div class="bg-shape-1"></div>
+        <div class="bg-shape-2"></div>
+        <div class="bg-shape-3"></div>
+
+        <div class="content-wrapper">
+            <h1 class="qa-title">Q&A</h1>
+            <p class="qa-subtitle">Thảo luận & Giải đáp</p>
+
+            <div class="thank-you-card">
+                <i class="fas fa-heart text-rose-500"></i>
+                <div>
+                    <div class="thank-you-text">Cảm ơn mọi người đã lắng nghe!</div>
+                    <div class="thank-you-sub">Seminar System Architecture</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i> Trước</button>
+            <button id="nextBtn" class="nav-btn">Hoàn thành <i class="fas fa-check-circle"></i></button>
+        </div>
+    </div>
+
+    <!-- Navigation JS -->
+    <script>
+        const slides = [
+            "index.html", "slide1.html", "slide2.html", "slide3.html", "slide4.html",
+            "slide5.html", "slide6.html", "slide7.html", "slide8.html", "slide9.html",
+            "slide10.html", "slide11.html", "slide13.html", "slide14.html", "slide15.html",
+            "slide16.html", "slide17.html", "slide18.html"
+        ];
+        let currentFile = window.location.pathname.split('/').pop();
+        if (!currentFile) currentFile = "index.html";
+        let currentIndex = slides.indexOf(currentFile);
+
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        if (currentIndex <= 0) prevBtn.disabled = true;
+        if (currentIndex >= slides.length - 1 || currentIndex === -1) nextBtn.disabled = true;
+
+        prevBtn.addEventListener("click", () => {
+            if (currentIndex > 0) window.location.href = slides[currentIndex - 1];
+        });
+
+        nextBtn.addEventListener("click", () => {
+            alert("Đã hoàn thành Seminar!");
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft" && currentIndex > 0) {
+                window.location.href = slides[currentIndex - 1];
+            }
+        });
+
+        function resizeSlide() {
+            const container = document.querySelector('.slide-container');
+            if (container) {
+                const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+                container.style.transform = `scale(${scale})`;
+            }
+        }
+        window.addEventListener('resize', resizeSlide);
+        resizeSlide();
+    </script>
+</body>
+
+</html>

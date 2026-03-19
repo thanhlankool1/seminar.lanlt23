@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ClickHouse Best Practices - Tổng Kết</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&display=swap"
+        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #0f172a;
+            /* Slate 900 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            display: flex;
+            position: relative;
+            background-color: #1e293b;
+            color: white;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform-origin: center center;
+            flex-direction: column;
+        }
+
+        /* Ambient Shapes for Dark Glassmorphism */
+        .bg-shape-1 {
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 700px;
+            height: 700px;
+            background-color: #f59e0b;
+            filter: blur(150px);
+            border-radius: 50%;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .bg-shape-2 {
+            position: absolute;
+            bottom: -200px;
+            right: -50px;
+            width: 800px;
+            height: 800px;
+            background-color: #10b981;
+            filter: blur(160px);
+            border-radius: 50%;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .bg-shape-3 {
+            position: absolute;
+            top: 30%;
+            right: 40%;
+            width: 400px;
+            height: 400px;
+            background-color: #3b82f6;
+            filter: blur(150px);
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 50px;
+            z-index: 10;
+            height: 100%;
+        }
+
+        .header-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 5px;
+        }
+
+        /* 2-Column Grid for 8 items */
+        .rules-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: repeat(4, auto);
+            gap: 12px 24px;
+            flex: 1;
+            align-content: stretch;
+            min-height: 0;
+        }
+
+        /* Rule Item Card */
+        .rule-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rule-card:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Number/Icon box */
+        .icon-box {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            position: relative;
+        }
+
+        /* 8 Colors for 8 rules */
+        .rule-1 .icon-box {
+            background: rgba(168, 85, 247, 0.2);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.5);
+        }
+
+        .rule-2 .icon-box {
+            background: rgba(56, 189, 248, 0.2);
+            color: #7dd3fc;
+            border: 1px solid rgba(56, 189, 248, 0.5);
+        }
+
+        .rule-3 .icon-box {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+            border: 1px solid rgba(16, 185, 129, 0.5);
+        }
+
+        .rule-4 .icon-box {
+            background: rgba(234, 179, 8, 0.2);
+            color: #fde047;
+            border: 1px solid rgba(234, 179, 8, 0.5);
+        }
+
+        .rule-5 .icon-box {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.5);
+        }
+
+        .rule-6 .icon-box {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fdba74;
+            border: 1px solid rgba(249, 115, 22, 0.5);
+        }
+
+        .rule-7 .icon-box {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, 0.5);
+        }
+
+        .rule-8 .icon-box {
+            background: rgba(236, 72, 153, 0.2);
+            color: #f9a8d4;
+            border: 1px solid rgba(236, 72, 153, 0.5);
+        }
+
+        .rule-text h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 16px;
+            color: white;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .rule-text p {
+            font-size: 13.5px;
+            line-height: 1.5;
+            color: #cbd5e1;
+            margin: 0;
+        }
+
+        .rule-text strong {
+            color: #f8fafc;
+        }
+
+        .code-tag {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #fbbf24;
+        }
+
+        /* Nav buttons */
+        .nav-buttons {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            color: inherit;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container">
+        <!-- Ambient Shapes -->
+        <div class="bg-shape-1"></div>
+        <div class="bg-shape-2"></div>
+        <div class="bg-shape-3"></div>
+
+        <div class="content-wrapper">
+            <div class="header-section">
+                <div>
+                    <h1
+                        class="font-montserrat font-black text-5xl text-white tracking-tight mb-1 uppercase drop-shadow-md">
+                        Best Practices & Tổng kết
+                    </h1>
+                    <p
+                        class="font-open-sans text-xl text-amber-400 font-semibold tracking-wide flex items-center gap-2">
+                        <i class="fas fa-crown"></i> 8 Nguyên lý "Vàng" khi làm việc với ClickHouse
+                    </p>
+                </div>
+            </div>
+
+            <!-- The 8 Rules Grid -->
+            <div class="rules-grid">
+
+                <!-- Left Column (1-4) -->
+                <div class="rule-card rule-1">
+                    <div class="icon-box"><i class="fas fa-brain"></i></div>
+                    <div class="rule-text">
+                        <h3 class="text-purple-300">1. Hiểu Business & Query trước</h3>
+                        <p>Xác định rõ các câu <strong>SELECT, WHERE, GROUP BY</strong> sẽ chạy nhiều nhất. Thay vì
+                            chuẩn hóa chuẩn 3NF như OLTP, Schema của CH phụ thuộc 100% vào nhu cầu đọc dữ liệu đầu ra.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Column (5-8) mapped by grid order (so 1 then 5 visually, or 1 then 2 left-right. Let's do left-right sequence: 1, 2 = row1) -->
+                <!-- Actually, left-right sequence fits reading flow better -->
+
+                <div class="rule-card rule-2">
+                    <div class="icon-box"><i class="fas fa-filter"></i></div>
+                    <div class="rule-text">
+                        <h3 class="text-sky-300">5. Index: Ít nhưng chất lượng</h3>
+                        <p>Đừng lạm dụng đánh index như B-Tree của MySQL. ClickHouse dùng <strong>Data Skipping
+                                Indexes</strong> (Minmax, Bloom filter) chỉ để báo hiệu việc "bỏ qua các khối dữ liệu
+                            thừa" khi quét.</p>
+                    </div>
+                </div>
+
+                <div class="rule-card rule-3">
+                    <div class="icon-box"><i class="fas fa-cubes"></i></div>
+                    <div class="rule-text">
+                        <h3 class="text-emerald-300">2. Chọn Data Type phù hợp</h3>
+                        <p>Thay vì dùng String bừa bãi, dùng <span class="code-tag">LowCardinality(String)</span> cho
+                            cột ít dị biệt (Tags, Status) hoặc Enum/UInt. Tiết kiệm RAM khổng lồ, giảm kích thước đĩa và
+                            tăng tốc query gấp bội.</p>
+                    </div>
+                </div>
+
+                <div class="rule-card rule-4">
+                    <div class="icon-box"><i class="fas fa-link-slash"></i></div>
+                    <div class="rule-text">
+                        <h3 class="text-yellow-300">6. Denormalize – Hạn chế JOIN</h3>
+                        <p>ClickHouse tối ưu cho scan & aggregation, không phải JOIN phức tạp
+
+                            JOIN (đặc biệt Hash JOIN) tiêu tốn RAM rất lớn và dễ trở thành bottleneck
+
+                            Với dữ liệu lớn, JOIN có thể làm query chậm đột ngột hoặc OOM
+
+                            Best practice: flatten (denormalize) dữ liệu ngay từ pipeline (Kafka / ETL)
+
+                            Lưu dữ liệu dạng wide table (flat table) để query trực tiếp, không cần JOIN</p>
+                    </div>
+                </div>
+
+                <div class="rule-card rule-5">
+                    <div class="icon-box"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="rule-text">
+                        <h3 class="text-red-300">3. Partition theo Time</h3>
+                        <p>Luôn chia luồng Partition theo tháng <span class="code-tag">toYYYYMM(time)</span> hoặc ngày.
+                            Đừng bao giờ chia nhỏ (Giờ/Phút) vì sẽ sinh hàng vạn thư mục vật lý Parts gây quá tải
+                            background merge.</p>
+                    </div>
+                </div>
+
+                <div class="rule-card rule-6">
+                    <div class="icon-box"><i class="fas fa-hourglass-half"></i></div>
+                    <div class="rule-text">
+                        <h3 class="text-orange-300">7. Cấu hình TTL & Retention</h3>
+                        <p>Log rác dọn không xuể nếu bỏ lơ. Hãy thiết lập lệnh <span class="code-tag">TTL</span> ngay từ
+                            đầu để hệ thống tự động xóa data cũ sau N tháng, hoặc cấu hình Nén Lạnh sang các cụm đĩa S3
+                            giá rẻ tự động.</p>
+                    </div>
+                </div>
+
+                <div class="rule-card rule-7">
+                    <div class="icon-box"><i class="fas fa-sort-amount-down"></i></div>
+                    <div class="rule-text">
+                        <h3 class="text-indigo-300">4. Order By: Key chính + Time</h3>
+                        <p>Định nghĩa Primary Key ngầm định (Sparse Index). Cột quan trọng (VD:
+                            <strong>Tenant_ID</strong> hoặc <strong>Status</strong>) hay dùng để WHERE bắt buộc đặt lên
+                            đầu tiên trong tuple ORDER BY, thay vì Time.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="rule-card rule-8">
+                    <div class="icon-box animate-pulse border-pink-400 bg-pink-500/30 text-white"><i
+                            class="fas fa-truck-loading"></i></div>
+                    <div class="rule-text">
+                        <h3 class="text-pink-300 border-b border-pink-500/50 pb-1 mb-1 inline-block">8. Insert theo
+                            Batch khổng lồ</h3>
+                        <p><strong>NGUYÊN TẮC SỐNG CÒN:</strong> Gom 10.000 đến 100.000 dòng hoặc gom 1 giây/lần rồi
+                            nhét trượt 1 mẻ lớn vào Database. Nghẽn thắt cổ chai sẽ nằm ở việc bạn Insert lẻ tẻ.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i> Trước</button>
+            <button id="nextBtn" class="nav-btn">Tiếp <i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <!-- Navigation JS -->
+    <script>
+        const slides = [
+            "index.html", "slide1.html", "slide2.html", "slide3.html", "slide4.html",
+            "slide5.html", "slide6.html", "slide7.html", "slide8.html", "slide9.html",
+            "slide10.html", "slide11.html", "slide13.html", "slide14.html", "slide15.html",
+            "slide16.html", "slide17.html", "slide18.html"
+        ];
+        let currentFile = window.location.pathname.split('/').pop();
+        if (!currentFile) currentFile = "index.html";
+        let currentIndex = slides.indexOf(currentFile);
+
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        if (currentIndex <= 0) prevBtn.disabled = true;
+        if (currentIndex >= slides.length - 1 || currentIndex === -1) nextBtn.disabled = true;
+
+        prevBtn.addEventListener("click", () => {
+            if (currentIndex > 0) window.location.href = slides[currentIndex - 1];
+        });
+
+        nextBtn.addEventListener("click", () => {
+            if (currentIndex > -1 && currentIndex < slides.length - 1) window.location.href = slides[currentIndex + 1];
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft" && currentIndex > 0) {
+                window.location.href = slides[currentIndex - 1];
+            } else if (e.key === "ArrowRight" && currentIndex > -1 && currentIndex < slides.length - 1) {
+                window.location.href = slides[currentIndex + 1];
+            }
+        });
+
+        function resizeSlide() {
+            const container = document.querySelector('.slide-container');
+            if (container) {
+                const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+                container.style.transform = `scale(${scale})`;
+            }
+        }
+        window.addEventListener('resize', resizeSlide);
+        resizeSlide();
+    </script>
+</body>
+
+</html>

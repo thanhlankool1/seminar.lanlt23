@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>ClickHouse Best Practices - Tổng Kết</title>
+    <title>Sức mạnh cốt lõi ClickHouse</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&display=swap"
         rel="stylesheet" />
@@ -19,7 +19,6 @@
             overflow: hidden;
             font-family: 'Open Sans', sans-serif;
             background-color: #0f172a;
-            /* Slate 900 */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -38,15 +37,16 @@
             flex-direction: column;
         }
 
-        /* Ambient Shapes for Dark Glassmorphism */
+        /* Decorative Background Shapes */
         .bg-shape-1 {
             position: absolute;
-            top: -100px;
-            left: -100px;
-            width: 700px;
-            height: 700px;
-            background-color: #f59e0b;
-            filter: blur(150px);
+            top: -150px;
+            left: -50px;
+            width: 500px;
+            height: 500px;
+            background-color: #0ea5e9;
+            /* Sky blue */
+            filter: blur(120px);
             border-radius: 50%;
             opacity: 0.15;
             z-index: 0;
@@ -55,11 +55,12 @@
         .bg-shape-2 {
             position: absolute;
             bottom: -200px;
-            right: -50px;
-            width: 800px;
-            height: 800px;
-            background-color: #10b981;
-            filter: blur(160px);
+            right: -100px;
+            width: 600px;
+            height: 600px;
+            background-color: #ef4444;
+            /* Red for MergeTree */
+            filter: blur(140px);
             border-radius: 50%;
             opacity: 0.15;
             z-index: 0;
@@ -67,12 +68,13 @@
 
         .bg-shape-3 {
             position: absolute;
-            top: 30%;
-            right: 40%;
+            bottom: 30%;
+            left: 30%;
             width: 400px;
             height: 400px;
-            background-color: #3b82f6;
-            filter: blur(150px);
+            background-color: #10b981;
+            /* Emerald */
+            filter: blur(140px);
             border-radius: 50%;
             opacity: 0.1;
             z-index: 0;
@@ -82,150 +84,205 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 25px 50px;
+            padding: 40px 60px;
             z-index: 10;
             height: 100%;
         }
 
         .header-section {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 5px;
+            padding-bottom: 15px;
         }
 
-        /* 2-Column Grid for 8 items */
-        .rules-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: repeat(4, auto);
-            gap: 12px 24px;
-            flex: 1;
-            align-content: stretch;
-            min-height: 0;
-        }
-
-        /* Rule Item Card */
-        .rule-card {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(10px);
-            padding: 15px 20px;
+        .cards-container {
             display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
+            gap: 25px;
+            flex: 1;
+            align-items: stretch;
+            padding-bottom: 10px;
+        }
+
+        /* Base Card Styling */
+        .feature-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            padding: 25px;
             position: relative;
             overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .rule-card:hover {
-            transform: translateX(5px);
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 255, 255, 0.15);
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
-        /* Number/Icon box */
+        /* Card Specifics */
+        .card-columnar {
+            border-top: 5px solid #0ea5e9;
+        }
+
+        /* Sky */
+        .card-speed {
+            border-top: 5px solid #10b981;
+        }
+
+        /* Emerald */
+        .card-mergetree {
+            border-top: 5px solid #ef4444;
+            /* Red */
+            background: rgba(239, 68, 68, 0.05);
+            /* Slight red tint */
+            border-color: rgba(239, 68, 68, 0.2);
+            box-shadow: inset 0 0 20px rgba(239, 68, 68, 0.05);
+        }
+
+        /* Glow effect for MergeTree */
+        .card-mergetree::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
         .icon-box {
-            width: 45px;
-            height: 45px;
-            border-radius: 10px;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
-            flex-shrink: 0;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            position: relative;
+            font-size: 24px;
         }
 
-        /* 8 Colors for 8 rules */
-        .rule-1 .icon-box {
-            background: rgba(168, 85, 247, 0.2);
-            color: #c084fc;
-            border: 1px solid rgba(168, 85, 247, 0.5);
+        .icon-columnar {
+            background: rgba(14, 165, 233, 0.2);
+            color: #38bdf8;
         }
 
-        .rule-2 .icon-box {
-            background: rgba(56, 189, 248, 0.2);
-            color: #7dd3fc;
-            border: 1px solid rgba(56, 189, 248, 0.5);
-        }
-
-        .rule-3 .icon-box {
+        .icon-speed {
             background: rgba(16, 185, 129, 0.2);
-            color: #6ee7b7;
-            border: 1px solid rgba(16, 185, 129, 0.5);
+            color: #34d399;
         }
 
-        .rule-4 .icon-box {
-            background: rgba(234, 179, 8, 0.2);
-            color: #fde047;
-            border: 1px solid rgba(234, 179, 8, 0.5);
-        }
-
-        .rule-5 .icon-box {
+        .icon-mergetree {
             background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            border: 1px solid rgba(239, 68, 68, 0.5);
+            color: #f87171;
         }
 
-        .rule-6 .icon-box {
-            background: rgba(249, 115, 22, 0.2);
-            color: #fdba74;
-            border: 1px solid rgba(249, 115, 22, 0.5);
-        }
-
-        .rule-7 .icon-box {
-            background: rgba(99, 102, 241, 0.2);
-            color: #a5b4fc;
-            border: 1px solid rgba(99, 102, 241, 0.5);
-        }
-
-        .rule-8 .icon-box {
-            background: rgba(236, 72, 153, 0.2);
-            color: #f9a8d4;
-            border: 1px solid rgba(236, 72, 153, 0.5);
-        }
-
-        .rule-text h3 {
+        .card-title {
             font-family: 'Montserrat', sans-serif;
-            font-weight: 800;
-            font-size: 16px;
+            font-weight: 700;
+            font-size: 20px;
             color: white;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            line-height: 1.2;
         }
 
-        .rule-text p {
-            font-size: 13.5px;
-            line-height: 1.5;
-            color: #cbd5e1;
+        .feature-list {
+            list-style: none;
+            padding: 0;
             margin: 0;
+            flex: 1;
+            position: relative;
+            z-index: 1;
         }
 
-        .rule-text strong {
-            color: #f8fafc;
+        .feature-list li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: #cbd5e1;
+            font-size: 16px;
+            line-height: 1.5;
         }
 
-        .code-tag {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 1px 4px;
-            border-radius: 4px;
-            font-family: monospace;
-            color: #fbbf24;
+        .feature-list li::before {
+            content: '\f0da';
+            /* FontAwesome caret-right */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: #64748b;
+        }
+
+        .card-columnar .feature-list li::before {
+            color: #38bdf8;
+        }
+
+        .card-speed .feature-list li::before {
+            color: #34d399;
+        }
+
+        .card-mergetree .feature-list li::before {
+            color: #f87171;
+        }
+
+        /* Notes Box at bottom */
+        .note-box {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .note-columnar {
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            color: #bae6fd;
+        }
+
+        .note-speed {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #a7f3d0;
+        }
+
+        .note-mergetree {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px dashed rgba(239, 68, 68, 0.5);
+            color: #fca5a5;
+        }
+
+        .note-icon {
+            font-size: 20px;
+            margin-top: 2px;
         }
 
         /* Nav buttons */
         .nav-buttons {
             position: absolute;
-            bottom: 15px;
+            bottom: 20px;
             right: 20px;
             z-index: 1000;
             display: flex;
@@ -237,10 +294,10 @@
             backdrop-filter: blur(5px);
             color: inherit;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 12px;
+            padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
             transition: all 0.3s;
             display: flex;
             align-items: center;
@@ -260,136 +317,120 @@
 
 <body>
     <div class="slide-container">
-        <!-- Ambient Shapes -->
+        <!-- Background Elements -->
         <div class="bg-shape-1"></div>
         <div class="bg-shape-2"></div>
         <div class="bg-shape-3"></div>
 
+        <!-- Main Content -->
         <div class="content-wrapper">
             <div class="header-section">
                 <div>
                     <h1
-                        class="font-montserrat font-black text-5xl text-white tracking-tight mb-1 uppercase drop-shadow-md">
-                        Best Practices & Tổng kết
+                        class="font-montserrat font-black text-6xl text-white tracking-tight mb-2 uppercase drop-shadow-md">
+                        Kiến trúc Sức mạnh ClickHouse
                     </h1>
                     <p
-                        class="font-open-sans text-xl text-amber-400 font-semibold tracking-wide flex items-center gap-2">
-                        <i class="fas fa-crown"></i> 8 Nguyên lý "Vàng" khi làm việc với ClickHouse
+                        class="font-open-sans text-xl text-slate-300 font-semibold tracking-wide flex items-center gap-2">
+                        <i class="fas fa-microchip text-teal-400"></i> Tại sao hệ thống lại siêu tốc?
                     </p>
                 </div>
             </div>
 
-            <!-- The 8 Rules Grid -->
-            <div class="rules-grid">
-
-                <!-- Left Column (1-4) -->
-                <div class="rule-card rule-1">
-                    <div class="icon-box"><i class="fas fa-brain"></i></div>
-                    <div class="rule-text">
-                        <h3 class="text-purple-300">1. Hiểu Business & Query trước</h3>
-                        <p>Xác định rõ các câu <strong>SELECT, WHERE, GROUP BY</strong> sẽ chạy nhiều nhất. Thay vì
-                            chuẩn hóa chuẩn 3NF như OLTP, Schema của CH phụ thuộc 100% vào nhu cầu đọc dữ liệu đầu ra.
-                        </p>
+            <!-- 3 Columns Layout -->
+            <div class="cards-container">
+                <!-- Card 1: Columnar Storage -->
+                <div class="feature-card card-columnar">
+                    <div class="card-header">
+                        <div class="icon-box icon-columnar">
+                            <i class="fas fa-columns"></i>
+                        </div>
+                        <h2 class="card-title">Columnar Storage</h2>
+                    </div>
+                    <ul class="feature-list">
+                        <li>Lưu dữ liệu theo <strong>từng cột</strong> thay vì theo dòng.</li>
+                        <li>Chỉ đọc các cột thực sự cần thiết khi Query.</li>
+                        <li>Giảm tải I/O (Input/Output) ổ cứng đáng kể.</li>
+                        <li>Tăng hiệu quả Compression (nén) dữ liệu.</li>
+                    </ul>
+                    <div class="note-box note-columnar mt-auto">
+                        <i class="fas fa-code note-icon"></i>
+                        <div>
+                            <div class="text-xs uppercase opacity-70 mb-1 tracking-wider">Ví dụ</div>
+                            <code class="bg-black/30 px-1 rounded text-white font-mono text-sm">SELECT age</code> &rarr;
+                            <span>Chỉ đọc đúng mảng dữ liệu cột age, bỏ qua toàn bộ phần còn lại.</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Right Column (5-8) mapped by grid order (so 1 then 5 visually, or 1 then 2 left-right. Let's do left-right sequence: 1, 2 = row1) -->
-                <!-- Actually, left-right sequence fits reading flow better -->
-
-                <div class="rule-card rule-2">
-                    <div class="icon-box"><i class="fas fa-filter"></i></div>
-                    <div class="rule-text">
-                        <h3 class="text-sky-300">5. Index: Ít nhưng chất lượng</h3>
-                        <p>Đừng lạm dụng đánh index như B-Tree của MySQL. ClickHouse dùng <strong>Data Skipping
-                                Indexes</strong> (Minmax, Bloom filter) chỉ để báo hiệu việc "bỏ qua các khối dữ liệu
-                            thừa" khi quét.</p>
+                <!-- Card 2: Speed Principles -->
+                <div class="feature-card card-speed">
+                    <div class="card-header">
+                        <div class="icon-box icon-speed">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h2 class="card-title">Vì sao lại cực nhanh?</h2>
+                    </div>
+                    <ul class="feature-list">
+                        <li>Bản chất cốt lõi: <strong>Đọc ít dữ liệu hơn</strong> từ đĩa cứng.</li>
+                        <li>Tận dụng Cache hiệu quả hơn rất nhiều.</li>
+                        <li>CPU xử lý theo <strong>Batch (Vectorized)</strong> thay vì từng dòng.</li>
+                        <li>Vô cùng phù hợp và tối ưu cho tính toán (Aggregation).</li>
+                    </ul>
+                    <div class="note-box note-speed mt-auto">
+                        <i class="fas fa-comment-dots note-icon"></i>
+                        <div>
+                            <div class="text-xs uppercase opacity-70 mb-1 tracking-wider">Tóm lại</div>
+                            <span>"ClickHouse nhanh thần tốc bản chất vì nó <strong>đọc ít data thừa hơn</strong> so với
+                                DB truyền thống."</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="rule-card rule-3">
-                    <div class="icon-box"><i class="fas fa-cubes"></i></div>
-                    <div class="rule-text">
-                        <h3 class="text-emerald-300">2. Chọn Data Type phù hợp</h3>
-                        <p>Thay vì dùng String bừa bãi, dùng <span class="code-tag">LowCardinality(String)</span> cho
-                            cột ít dị biệt (Tags, Status) hoặc Enum/UInt. Tiết kiệm RAM khổng lồ, giảm kích thước đĩa và
-                            tăng tốc query gấp bội.</p>
+                <!-- Card 3: MergeTree (Core Engine) -->
+                <div class="feature-card card-mergetree">
+                    <!-- Special badge -->
+                    <div
+                        class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg z-10 uppercase tracking-widest shadow-lg">
+                        Core
+                    </div>
+                    <div class="card-header">
+                        <div class="icon-box icon-mergetree">
+                            <i class="fab fa-hubspot"></i>
+                        </div>
+                        <h2 class="card-title">MergeTree Engine</h2>
+                    </div>
+                    <ul class="feature-list">
+                        <li>Là <strong>Engine chính và linh hồn</strong> của ClickHouse.</li>
+                        <li>Dữ liệu được lưu trữ phân mảnh thành các <strong>"Parts"</strong>.</li>
+                        <li>Ghi dữ liệu (Insert) dạng <strong>Append-only</strong> siêu tốc.</li>
+                        <li>Tiến trình <strong>Background Merge</strong> liên tục dọn dẹp và tối ưu Parts.</li>
+                    </ul>
+                    <div class="note-box note-mergetree mt-auto">
+                        <i class="fas fa-fire note-icon"></i>
+                        <div>
+                            <div class="text-xs uppercase opacity-80 mb-1 tracking-wider text-red-300">Nhấn mạnh</div>
+                            <span class="text-white">Đây chính là phần <strong>quan trọng và lõi nhất</strong> tạo nên
+                                sức mạnh của ClickHouse.</span>
+                        </div>
                     </div>
                 </div>
-
-                <div class="rule-card rule-4">
-                    <div class="icon-box"><i class="fas fa-link-slash"></i></div>
-                    <div class="rule-text">
-                        <h3 class="text-yellow-300">6. Denormalize – Hạn chế JOIN</h3>
-                        <p>ClickHouse tối ưu cho scan & aggregation, không phải JOIN phức tạp
-
-                            JOIN (đặc biệt Hash JOIN) tiêu tốn RAM rất lớn và dễ trở thành bottleneck
-
-                            Với dữ liệu lớn, JOIN có thể làm query chậm đột ngột hoặc OOM
-
-                            Best practice: flatten (denormalize) dữ liệu ngay từ pipeline (Kafka / ETL)
-
-                            Lưu dữ liệu dạng wide table (flat table) để query trực tiếp, không cần JOIN</p>
-                    </div>
-                </div>
-
-                <div class="rule-card rule-5">
-                    <div class="icon-box"><i class="fas fa-calendar-alt"></i></div>
-                    <div class="rule-text">
-                        <h3 class="text-red-300">3. Partition theo Time</h3>
-                        <p>Luôn chia luồng Partition theo tháng <span class="code-tag">toYYYYMM(time)</span> hoặc ngày.
-                            Đừng bao giờ chia nhỏ (Giờ/Phút) vì sẽ sinh hàng vạn thư mục vật lý Parts gây quá tải
-                            background merge.</p>
-                    </div>
-                </div>
-
-                <div class="rule-card rule-6">
-                    <div class="icon-box"><i class="fas fa-hourglass-half"></i></div>
-                    <div class="rule-text">
-                        <h3 class="text-orange-300">7. Cấu hình TTL & Retention</h3>
-                        <p>Log rác dọn không xuể nếu bỏ lơ. Hãy thiết lập lệnh <span class="code-tag">TTL</span> ngay từ
-                            đầu để hệ thống tự động xóa data cũ sau N tháng, hoặc cấu hình Nén Lạnh sang các cụm đĩa S3
-                            giá rẻ tự động.</p>
-                    </div>
-                </div>
-
-                <div class="rule-card rule-7">
-                    <div class="icon-box"><i class="fas fa-sort-amount-down"></i></div>
-                    <div class="rule-text">
-                        <h3 class="text-indigo-300">4. Order By: Key chính + Time</h3>
-                        <p>Định nghĩa Primary Key ngầm định (Sparse Index). Cột quan trọng (VD:
-                            <strong>Tenant_ID</strong> hoặc <strong>Status</strong>) hay dùng để WHERE bắt buộc đặt lên
-                            đầu tiên trong tuple ORDER BY, thay vì Time.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="rule-card rule-8">
-                    <div class="icon-box animate-pulse border-pink-400 bg-pink-500/30 text-white"><i
-                            class="fas fa-truck-loading"></i></div>
-                    <div class="rule-text">
-                        <h3 class="text-pink-300 border-b border-pink-500/50 pb-1 mb-1 inline-block">8. Insert theo
-                            Batch khổng lồ</h3>
-                        <p><strong>NGUYÊN TẮC SỐNG CÒN:</strong> Gom 10.000 đến 100.000 dòng hoặc gom 1 giây/lần rồi
-                            nhét trượt 1 mẻ lớn vào Database. Nghẽn thắt cổ chai sẽ nằm ở việc bạn Insert lẻ tẻ.</p>
-                    </div>
-                </div>
-
             </div>
         </div>
 
-        <!-- Navigation Buttons -->
+        <!-- Navigation -->
         <div class="nav-buttons">
             <button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i> Trước</button>
-            <button id="nextBtn" class="nav-btn">Kết Nối Thực Tế <i class="fas fa-rocket"></i></button>
+            <button id="nextBtn" class="nav-btn">Tiếp <i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
 
-    <!-- Navigation JS -->
     <script>
         const slides = [
             "index.html", "slide1.html", "slide2.html", "slide3.html", "slide4.html",
             "slide5.html", "slide6.html", "slide7.html", "slide8.html", "slide9.html",
-            "slide10.html", "slide11.html", "slide12.html", "slide13.html", "slide14.html"
+            "slide10.html", "slide11.html", "slide13.html", "slide14.html", "slide15.html",
+            "slide16.html", "slide17.html", "slide18.html"
         ];
         let currentFile = window.location.pathname.split('/').pop();
         if (!currentFile) currentFile = "index.html";
@@ -406,16 +447,14 @@
         });
 
         nextBtn.addEventListener("click", () => {
-            // Loop or end
-            // if (currentIndex > -1 && currentIndex < slides.length - 1) window.location.href = slides[currentIndex + 1];
-            alert("Hoàn thành Seminar! Bạn đang ở Slide cuối cùng.");
+            if (currentIndex > -1 && currentIndex < slides.length - 1) window.location.href = slides[currentIndex + 1];
         });
 
         document.addEventListener("keydown", (e) => {
             if (e.key === "ArrowLeft" && currentIndex > 0) {
                 window.location.href = slides[currentIndex - 1];
             } else if (e.key === "ArrowRight" && currentIndex > -1 && currentIndex < slides.length - 1) {
-                // window.location.href = slides[currentIndex + 1];
+                window.location.href = slides[currentIndex + 1];
             }
         });
 

@@ -4,384 +4,280 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>OLTP vs OLAP</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&display=swap"
-        rel="stylesheet" />
+    <title>Golang Error Handling</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            font-family: 'Open Sans', sans-serif;
-            background-color: #0f172a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden;
+            font-family: 'Open Sans', sans-serif; background-color: #0f172a; /* Slate 900 */
+            display: flex; justify-content: center; align-items: center;
         }
 
         .slide-container {
-            width: 1280px;
-            height: 720px;
-            display: flex;
-            position: relative;
-            background-color: #1e293b;
-            color: white;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transform-origin: center center;
+            width: 1280px; height: 720px; display: flex; position: relative;
+            background-color: #1e293b; color: white; overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transform-origin: center center;
             flex-direction: column;
         }
 
-        /* Decorative Background Shapes */
-        .bg-shape-1 {
-            position: absolute;
-            top: -100px;
-            left: -100px;
-            width: 600px;
-            height: 600px;
-            background-color: #1d4ed8;
-            /* Blue 700 for OLTP */
-            filter: blur(120px);
-            border-radius: 50%;
-            opacity: 0.15;
-            z-index: 0;
-        }
-
-        .bg-shape-2 {
-            position: absolute;
-            bottom: -100px;
-            right: -100px;
-            width: 600px;
-            height: 600px;
-            background-color: #d97706;
-            /* Amber 600 for OLAP */
-            filter: blur(120px);
-            border-radius: 50%;
-            opacity: 0.15;
-            z-index: 0;
-        }
-
+        /* Ambient Shapes */
+        .bg-shape-1 { position: absolute; top: -100px; left: -100px; width: 600px; height: 600px; background-color: #0ea5e9; filter: blur(140px); border-radius: 50%; opacity: 0.15; z-index: 0; }
+        .bg-shape-2 { position: absolute; bottom: -150px; right: -50px; width: 700px; height: 700px; background-color: #eab308; filter: blur(150px); border-radius: 50%; opacity: 0.12; z-index: 0; }
+        
         .content-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 40px 60px;
-            z-index: 10;
-            height: 100%;
+            flex: 1; display: flex; flex-direction: column; padding: 25px 50px; z-index: 10; height: 100%;
         }
 
         .header-section {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 25px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 15px;
+            display: flex; align-items: flex-end; justify-content: space-between;
+            margin-bottom: 20px; border-bottom: 2px solid rgba(255, 255, 255, 0.1); padding-bottom: 10px;
         }
 
-        .defs-container {
+        /* 2x2 Grid setup */
+        .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 25px;
-        }
-
-        .def-card {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 20px 25px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .def-card.oltp {
-            border-top: 4px solid #3b82f6;
-            /* Blue 500 */
-            box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.15);
-        }
-
-        .def-card.olap {
-            border-top: 4px solid #f59e0b;
-            /* Amber 500 */
-            box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.15);
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: 240px 1fr 1fr;
-            gap: 10px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            grid-template-rows: auto auto;
+            gap: 20px;
             flex: 1;
+            overflow-y: auto;
+            padding-right: 15px;
+            padding-bottom: 20px;
         }
 
-        .grid-header {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            font-size: 18px;
-            text-align: center;
-            padding: 12px;
-            border-radius: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+        /* Custom Scrollbar */
+        .main-grid::-webkit-scrollbar { width: 8px; }
+        .main-grid::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+        .main-grid::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+        .main-grid::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+
+        /* Card styles */
+        .card {
+            background: rgba(255, 255, 255, 0.03); border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);
+            padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column;
+        }
+        
+        .card.go-card { border-top: 4px solid #38bdf8; } /* Sky */
+        .card.py-card { border-top: 4px solid #facc15; } /* Yellow */
+        
+        .card-title {
+            font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 18px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px;
         }
 
-        .header-criteria {
-            background: transparent;
-            color: #94a3b8;
-            text-align: left;
-            justify-content: flex-start;
+        .theory-box {
+            background: rgba(0,0,0,0.2); padding: 12px 15px; border-radius: 8px;
+            display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;
+        }
+        .theory-box p { margin: 0; font-size: 14px; color: #cbd5e1; display: flex; align-items: start; gap: 8px; }
+        .theory-box p i { color: #34d399; margin-top: 3px; font-size: 12px; }
+        .theory-box.py-theory p i { color: #facc15; }
+
+        .philosophy {
+            font-style: italic; font-weight: bold; font-size: 14.5px;
+            padding: 8px 12px; border-radius: 6px; text-align: center;
+        }
+        .go-phil { background: rgba(56, 189, 248, 0.15); color: #bae6fd; border: 1px solid rgba(56, 189, 248, 0.3); }
+        .py-phil { background: rgba(250, 204, 21, 0.15); color: #fef08a; border: 1px solid rgba(250, 204, 21, 0.3); }
+
+        /* Code Blocks */
+        .code-box {
+            background: #1e1e1e; border-radius: 8px; padding: 15px; margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.08); font-family: 'Fira Code', monospace;
+            font-size: 14px; line-height: 1.5; color: #d4d4d4;
         }
 
-        .header-oltp {
-            background: rgba(59, 130, 246, 0.15);
-            color: #60a5fa;
-            border-bottom: 2px solid #3b82f6;
-        }
+        /* Go Colors */
+        .g-kw { color: #c586c0; font-weight: bold; } /* Keyword */
+        .g-fn { color: #dcdcaa; } /* Function */
+        .g-op { color: #d4d4d4; }
+        
+        /* Py Colors */
+        .p-kw { color: #c586c0; font-weight: bold; }
+        .p-fn { color: #dcdcaa; }
+        .p-var { color: #9cdcfe; }
 
-        .header-olap {
-            background: rgba(245, 158, 11, 0.15);
-            color: #fbbf24;
-            border-bottom: 2px solid #f59e0b;
-        }
+        /* Table Area */
+        .table-card { border-top: 4px solid #a855f7; grid-column: 1 / 2; }
+        .cmp-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .cmp-table th { background: rgba(255,255,255,0.08); color: white; padding: 10px; text-align: left; }
+        .cmp-table td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #cbd5e1; }
+        .cmp-table tr:last-child td { border-bottom: none; }
+        
+        /* Features Area */
+        .features-card { border-top: 4px solid #ef4444; grid-column: 2 / 3; display: flex; flex-direction: column; gap: 15px; }
+        
+        .insight-box { background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 10px 15px; border-radius: 0 8px 8px 0; }
+        .pitfall-box { background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; padding: 10px 15px; border-radius: 0 8px 8px 0; }
+        .bestproc-box { background: rgba(56, 189, 248, 0.1); border-left: 3px solid #38bdf8; padding: 10px 15px; border-radius: 0 8px 8px 0; }
 
-        .grid-cell {
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            font-size: 17px;
-            border-radius: 6px;
-            background: rgba(255, 255, 255, 0.02);
-            transition: background 0.2s;
-        }
-
-        .grid-cell:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .cell-criteria {
-            font-weight: 600;
-            color: #cbd5e1;
-            justify-content: flex-end;
-            text-align: right;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            background: transparent;
-        }
-
-        .cell-oltp {
-            color: #bfdbfe;
-            justify-content: flex-start;
-        }
-
-        .cell-olap {
-            color: #fef3c7;
-            justify-content: flex-start;
-        }
-
-        /* Icon pills in grid */
-        .grid-icon {
-            width: 32px;
-            height: 32px;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 8px;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-
-        .icon-oltp {
-            background: rgba(59, 130, 246, 0.2);
-            color: #60a5fa;
-        }
-
-        .icon-olap {
-            background: rgba(245, 158, 11, 0.2);
-            color: #fbbf24;
-        }
-
-        /* Highlight Note */
-        .highlight-note {
-            margin-top: 20px;
-            background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
-            border-left: 4px solid #10b981;
-            padding: 12px 24px;
-            border-radius: 0 8px 8px 0;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
+        .f-title { font-weight: bold; margin-bottom: 5px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .f-content { font-size: 13.5px; color: #e2e8f0; line-height: 1.5; }
+        .inline-code { background: rgba(0,0,0,0.4); padding: 1px 4px; border-radius: 4px; font-family: monospace; color: #facc15; }
 
         /* Nav buttons */
-        .nav-buttons {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            gap: 10px;
-        }
-
-        .nav-btn {
-            background-color: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(5px);
-            color: inherit;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-btn:hover {
-            background-color: rgba(255, 255, 255, 0.4);
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
+        .nav-buttons { position: absolute; bottom: 15px; right: 20px; z-index: 1000; display: flex; gap: 10px; }
+        .nav-btn { background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(5px); color: inherit; border: 1px solid rgba(255, 255, 255, 0.3); padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 14px; transition: all 0.3s; display: flex; align-items: center; gap: 8px; }
+        .nav-btn:hover { background-color: rgba(255, 255, 255, 0.4); }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
     </style>
 </head>
 
 <body>
     <div class="slide-container">
-        <!-- Background Elements -->
+        <!-- Ambient Shapes -->
         <div class="bg-shape-1"></div>
         <div class="bg-shape-2"></div>
 
-        <!-- Main Content -->
         <div class="content-wrapper">
             <div class="header-section">
                 <div>
-                    <h1
-                        class="font-montserrat font-black text-6xl text-white tracking-tight mb-2 uppercase drop-shadow-md">
-                        OLTP <span class="text-slate-500 mx-2">vs</span> OLAP
+                    <h1 class="font-montserrat font-black text-4xl text-white tracking-tight mb-2 uppercase drop-shadow-md">
+                        <i class="fas fa-balance-scale text-fuchsia-400"></i> Xử Lý Lỗi (Error Handling)
                     </h1>
-                    <p class="font-open-sans text-xl text-slate-300 font-semibold tracking-wide">
-                        Phân biệt 2 luồng kiến trúc cơ sở dữ liệu phổ biến
+                    <p class="font-open-sans text-lg text-slate-300 font-semibold tracking-wide">
+                        Sự đối lập triết lý giữa <span class="text-sky-400">Golang</span> và <span class="text-yellow-400">Python</span>
                     </p>
                 </div>
             </div>
 
-            <!-- Definitions -->
-            <div class="defs-container">
-                <div class="def-card oltp">
-                    <h3 class="text-xl font-bold text-blue-400 mb-2 flex items-center gap-2">
-                        <i class="fas fa-exchange-alt"></i> OLTP
-                        <span class="text-xs text-blue-300/60 font-medium tracking-widest ml-auto">(Online Transaction
-                            Processing)</span>
-                    </h3>
-                    <p class="text-slate-300 text-sm leading-relaxed">
-                        Hệ thống xử lý giao dịch. Tối ưu cho việc <strong>Ghi / Đọc nhanh</strong> các giao dịch nhỏ lẻ,
-                        liên tục. Đảm bảo tính nhất quán (ACID) tuyệt đối cho hệ thống vận hành lõi (Core Business).
-                    </p>
+            <!-- Main Flex/Grid -->
+            <div class="main-grid">
+                
+                <!-- Go Card -->
+                <div class="card go-card">
+                    <h3 class="card-title text-sky-400"><i class="fab fa-golang text-2xl"></i> Explicit Error Handling</h3>
+                    <div class="code-box">
+data, err <span class="g-op">:=</span> <span class="g-fn">fetch</span>()
+<span class="g-kw">if</span> err <span class="g-op">!=</span> <span class="g-kw">nil</span> {
+    <span class="g-kw">return</span> err
+}
+<span class="g-fn">process</span>(data)
+                    </div>
+                    <div class="theory-box">
+                        <p><i class="fas fa-check-circle text-sky-400"></i> Error được coi là một biến/giá trị bình thường (Value).</p>
+                        <p><i class="fas fa-check-circle text-sky-400"></i> Phải kiểm tra lỗi (check) một cách rõ ràng (Explicit).</p>
+                        <p><i class="fas fa-check-circle text-sky-400"></i> Không tồn tại khái niệm try/catch.</p>
+                    </div>
+                    <div class="philosophy go-phil mt-auto">
+                        👉 Triết lý: "Errors are values"
+                    </div>
                 </div>
-                <div class="def-card olap">
-                    <h3 class="text-xl font-bold text-amber-500 mb-2 flex items-center gap-2">
-                        <i class="fas fa-chart-line"></i> OLAP
-                        <span class="text-xs text-amber-300/60 font-medium tracking-widest ml-auto">(Online Analytical
-                            Processing)</span>
-                    </h3>
-                    <p class="text-slate-300 text-sm leading-relaxed">
-                        Hệ thống xử lý phân tích. Tối ưu cho việc <strong>Tổng hợp / Truy vấn</strong> tập dữ liệu khổng
-                        lồ phục vụ báo cáo, phân tích số liệu (Analytics) trong thời gian siêu tốc.
-                    </p>
+
+                <!-- Python Card -->
+                <div class="card py-card">
+                    <h3 class="card-title text-yellow-400"><i class="fab fa-python text-2xl"></i> Exception Handling</h3>
+                    <div class="code-box">
+<span class="p-kw">try</span>:
+    data = <span class="p-fn">fetch</span>()
+    <span class="p-fn">process</span>(data)
+<span class="p-kw">except</span> <span class="p-var">Exception</span> <span class="p-kw">as</span> e:
+    <span class="p-fn">print</span>(e)
+                    </div>
+                    <div class="theory-box py-theory">
+                        <p><i class="fas fa-bolt"></i> Exception tự động ném (propagate) lên Call stack.</p>
+                        <p><i class="fas fa-bolt"></i> Phải bọc bằng try/catch block.</p>
+                        <p><i class="fas fa-bolt"></i> Flow không hiển thị rõ hàm nào sẽ quăng lỗi.</p>
+                    </div>
+                    <div class="philosophy py-phil mt-auto">
+                        👉 Triết lý: "Easier to ask forgiveness than permission"
+                    </div>
                 </div>
+
+                <!-- Comparison Table -->
+                <div class="card table-card">
+                    <h3 class="card-title text-fuchsia-300"><i class="fas fa-swords"></i> So sánh nhanh</h3>
+                    <table class="cmp-table">
+                        <thead>
+                            <tr>
+                                <th>Tiêu chí</th>
+                                <th class="text-sky-300 font-bold">Golang</th>
+                                <th class="text-yellow-300 font-bold">Python</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Cách xử lý</td>
+                                <td>Explicit (Giá trị trả về)</td>
+                                <td>Exception (Ngoại lệ)</td>
+                            </tr>
+                            <tr>
+                                <td>Flow luồng đi</td>
+                                <td>Rõ ràng (Đọc từ trên xuống)</td>
+                                <td>Ẩn (Nhảy ra khỏi block)</td>
+                            </tr>
+                            <tr>
+                                <td>Độ khó Debug</td>
+                                <td class="text-emerald-400">Dễ (Biết ngay hàm nào lỗi)</td>
+                                <td class="text-red-400">Khó hơn (Truy stacktrace)</td>
+                            </tr>
+                            <tr>
+                                <td>Độ dài Code</td>
+                                <td class="text-red-400">Dài, lặp lại nhiều `if err != nil`</td>
+                                <td class="text-emerald-400">Ngắn, bọc 1 lần</td>
+                            </tr>
+                            <tr>
+                                <td>Runtime Cost</td>
+                                <td class="text-emerald-400">Thấp</td>
+                                <td class="text-red-400">Exception đắt đỏ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Insights & Practices -->
+                <div class="card features-card">
+                    
+                    <div class="insight-box">
+                        <div class="f-title text-emerald-400"><i class="fas fa-eye"></i> Lời Khuyên (Insight)</div>
+                        <div class="f-content">
+                            <b>Go:</b> Kiểm soát lỗi cực kỳ rõ ràng, predictable, không bất ngờ.<br>
+                            <b>Python:</b> Code gọn gàng, nhưng rất dễ vô tình "nuốt lỗi" nếu bọc khối Try quá bự.
+                        </div>
+                    </div>
+
+                    <div class="pitfall-box">
+                        <div class="f-title text-red-400"><i class="fas fa-bomb"></i> Hàm hố cần tránh (Pitfall)</div>
+                        <div class="f-content font-mono text-xs">
+                            <span class="text-yellow-300">Py:</span> except Exception: pass <span class="bg-red-500/20 text-red-200 px-1 rounded ml-1">❌ mất lỗi</span><br>
+                            <span class="text-sky-300 mt-1 inline-block">Go:</span> _ = err <span class="bg-red-500/20 text-red-200 px-1 rounded ml-1">❌ ignore error</span>
+                        </div>
+                    </div>
+
+                    <div class="bestproc-box">
+                        <div class="f-title text-sky-400"><i class="fas fa-star"></i> Go Best Practices</div>
+                        <div class="f-content">
+                            <ul class="list-disc pl-4 space-y-1 mt-1">
+                                <li><strong>Luôn check err:</strong> Không được bỏ qua `err`.</li>
+                                <li><strong>Wrap error để trace:</strong> <span class="inline-code">return fmt.Errorf("fail: %w", err)</span> để giữ lại gốc lỗi.</li>
+                                <li><strong>Không dùng Panic:</strong> Panic chỉ dùng khi app chết (crash), tuyệt đối không dùng cho Business Logic.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
-
-            <!-- Comparison Table -->
-            <div class="comparison-grid">
-                <!-- Headers -->
-                <div class="grid-header header-criteria">Tiêu chí</div>
-                <div class="grid-header header-oltp"><i class="fas fa-database"></i> OLTP</div>
-                <div class="grid-header header-olap"><i class="fas fa-bolt"></i> OLAP</div>
-
-                <!-- Row 1 -->
-                <div class="grid-cell cell-criteria">Hệ quản trị tiêu biểu</div>
-                <div class="grid-cell cell-oltp font-mono text-sm">
-                    <span class="grid-icon icon-oltp"><i class="fas fa-cube"></i></span> MySQL, Postgres
-                </div>
-                <div class="grid-cell cell-olap font-mono text-sm">
-                    <span class="grid-icon icon-olap"><i class="fas fa-star"></i></span> ClickHouse
-                </div>
-
-                <!-- Row 2 -->
-                <div class="grid-cell cell-criteria">Luồng ghi dữ liệu (Write)</div>
-                <div class="grid-cell cell-oltp">
-                    <span class="grid-icon icon-oltp"><i class="fas fa-pen"></i></span> Ghi nhiều bản ghi nhỏ lẻ
-                </div>
-                <div class="grid-cell cell-olap">
-                    <span class="grid-icon icon-olap"><i class="fas fa-truck-loading"></i></span> Batch insert lớn định
-                    kỳ/real-time
-                </div>
-
-                <!-- Row 3 -->
-                <div class="grid-cell cell-criteria">Cách truy vấn (Query)</div>
-                <div class="grid-cell cell-oltp">
-                    <span class="grid-icon icon-oltp"><i class="fas fa-table"></i></span> Lấy dữ liệu theo dòng (Row)
-                </div>
-                <div class="grid-cell cell-olap">
-                    <span class="grid-icon icon-olap"><i class="fas fa-columns"></i></span> Quét & Tổng hợp theo cột
-                    (Column)
-                </div>
-
-                <!-- Row 4 -->
-                <div class="grid-cell cell-criteria">Mục đích chính</div>
-                <div class="grid-cell cell-oltp">
-                    <span class="grid-icon icon-oltp"><i class="fas fa-shopping-cart"></i></span> Xử lý Giao dịch
-                    (Transaction)
-                </div>
-                <div class="grid-cell cell-olap">
-                    <span class="grid-icon icon-olap"><i class="fas fa-chart-pie"></i></span> Phân tích (Analytics)
-                </div>
-            </div>
-
-            <!-- Conclusion Note -->
-            <div class="highlight-note">
-                <i class="fas fa-info-circle text-emerald-400 text-3xl"></i>
-                <div>
-                    <h4 class="font-bold text-white text-lg">Lưu ý quan trọng: Đi cùng nhau, không thay thế</h4>
-                    <p class="text-emerald-50 text-base">
-                        ClickHouse <strong>không thay thế MySQL</strong>. Trong khối kiến trúc hiện đại, OLTP (MySQL)
-                        giữ vai trò vận hành, còn OLAP (ClickHouse) đóng vai trò bổ sung chuyên biệt để xử lý Logging &
-                        Analytics.
-                    </p>
-                </div>
-            </div>
-
         </div>
 
-        <!-- Navigation -->
+        <!-- Navigation Buttons -->
         <div class="nav-buttons">
             <button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i> Trước</button>
             <button id="nextBtn" class="nav-btn">Tiếp <i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
 
+    <!-- Script Navigation -->
     <script>
         const slides = [
             "index.html", "slide1.html", "slide2.html", "slide3.html", "slide4.html",
             "slide5.html", "slide6.html", "slide7.html", "slide8.html", "slide9.html",
-            "slide10.html", "slide11.html", "slide13.html", "slide14.html"
+            "slide10.html", "slide11.html", "slide12.html", "slide13.html", "slide14.html",
+            "slide15.html", "slide16.html", "slide17.html", "slide18.html", "slide19.html", "slide20.html"
         ];
         let currentFile = window.location.pathname.split('/').pop();
         if (!currentFile) currentFile = "index.html";

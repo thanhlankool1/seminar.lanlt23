@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>ClickHouse là gì?</title>
+    <title>Golang Channel - Worker Pool Thực Tế</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&family=Fira+Code:wght@400;500&display=swap"
         rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
@@ -19,6 +19,7 @@
             overflow: hidden;
             font-family: 'Open Sans', sans-serif;
             background-color: #0f172a;
+            /* Slate 900 */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -37,16 +38,15 @@
             flex-direction: column;
         }
 
-        /* Decorative Background Shapes */
+        /* Ambient Shapes for Go Theme */
         .bg-shape-1 {
             position: absolute;
-            top: -200px;
-            right: -100px;
-            width: 800px;
-            height: 800px;
-            background-color: #f59e0b;
-            /* Amber/Yellow for ClickHouse */
-            filter: blur(120px);
+            top: -100px;
+            left: -100px;
+            width: 700px;
+            height: 700px;
+            background-color: #0ea5e9;
+            filter: blur(150px);
             border-radius: 50%;
             opacity: 0.15;
             z-index: 0;
@@ -55,14 +55,26 @@
         .bg-shape-2 {
             position: absolute;
             bottom: -200px;
-            left: -150px;
-            width: 700px;
-            height: 700px;
-            background-color: #dc2626;
-            /* Red logic */
-            filter: blur(120px);
+            right: -50px;
+            width: 800px;
+            height: 800px;
+            background-color: #38bdf8;
+            filter: blur(160px);
             border-radius: 50%;
-            opacity: 0.15;
+            opacity: 0.12;
+            z-index: 0;
+        }
+
+        .bg-shape-3 {
+            position: absolute;
+            top: 30%;
+            right: 40%;
+            width: 400px;
+            height: 400px;
+            background-color: #fbbf24;
+            filter: blur(150px);
+            border-radius: 50%;
+            opacity: 0.1;
             z-index: 0;
         }
 
@@ -70,125 +82,176 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 50px 80px;
+            padding: 30px 50px;
             z-index: 10;
             height: 100%;
         }
 
         .header-section {
             display: flex;
-            justify-content: space-between;
             align-items: flex-end;
-            margin-bottom: 40px;
+            justify-content: space-between;
+            margin-bottom: 25px;
             border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 15px;
+            padding-bottom: 10px;
         }
 
-        .main-layout {
-            display: flex;
-            gap: 40px;
+        /* Main Grid Split */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 35% 65%;
+            gap: 30px;
             flex: 1;
+            overflow-y: auto;
+            padding-right: 15px;
+            padding-bottom: 25px;
         }
 
-        .left-col {
-            flex: 1.2;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        /* Custom Scrollbar */
+        .main-grid::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .right-col {
-            flex: 0.8;
-            display: flex;
-            flex-direction: column;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-        }
-
-        /* Information Cards */
-        .info-card {
+        .main-grid::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 24px;
-            border-left: 6px solid #f59e0b;
-            display: flex;
-            align-items: flex-start;
-            gap: 20px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
+            border-radius: 4px;
         }
 
-        .info-card:hover {
-            transform: translateX(10px);
-            background: rgba(255, 255, 255, 0.08);
+        .main-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
         }
 
-        .info-card.blue-border {
-            border-left-color: #3b82f6;
+        .main-grid::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
-        .icon-circle {
-            width: 60px;
-            height: 60px;
+        /* Note Cards */
+        .info-card {
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 28px;
-            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
         }
 
-        .bg-amber-light {
-            background: rgba(245, 158, 11, 0.2);
-        }
-
-        .bg-blue-light {
-            background: rgba(59, 130, 246, 0.2);
-        }
-
-        .pill {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        /* Right column items */
-        .example-item {
+        .card-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 16px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
+            gap: 8px;
+        }
+
+        .syntax-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #38bdf8;
             margin-bottom: 15px;
-            transition: all 0.2s;
+            font-family: 'Fira Code', monospace;
+            line-height: 1.6;
         }
 
-        .example-item:hover {
-            background: rgba(245, 158, 11, 0.15);
-            transform: scale(1.02);
-            border-color: rgba(245, 158, 11, 0.3);
+        .syntax-hl-send {
+            color: #facc15;
+            font-weight: bold;
         }
 
-        .example-item i {
-            font-size: 24px;
-            color: #fbd38d;
-            /* Yellow 200 */
+        /* Yellow for send */
+        .syntax-hl-recv {
+            color: #34d399;
+            font-weight: bold;
         }
+
+        /* Emerald for recv */
+
+        /* Code Block */
+        .code-container {
+            background: #282c34;
+            border-radius: 12px;
+            padding: 25px 30px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-container::before {
+            content: 'worker_pool.go';
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: #38bdf8;
+            color: #0f172a;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        pre {
+            font-family: 'Fira Code', monospace;
+            font-size: 15px;
+            line-height: 1.5;
+            color: #abb2bf;
+            margin: 0;
+            tab-size: 4;
+        }
+
+        /* Go Syntax Colors */
+        .kw {
+            color: #c678dd;
+            font-weight: bold;
+        }
+
+        /* Keywords (for, func, go, chan, package, import) */
+        .fn {
+            color: #61afef;
+        }
+
+        /* Functions (make, fmt.Printf, time.Sleep, close) */
+        .dt {
+            color: #e5c07b;
+        }
+
+        /* Data types (int, <-chan) */
+        .str {
+            color: #98c379;
+        }
+
+        /* Strings */
+        .num {
+            color: #d19a66;
+        }
+
+        /* Numbers */
+        .cm {
+            color: #7f848e;
+            font-style: italic;
+        }
+
+        /* Comments */
+        .op {
+            color: #56b6c2;
+        }
+
+        /* Operators */
+        .hl {
+            color: #e06c75;
+            font-weight: bold;
+        }
+
+        /* Vars */
 
         /* Nav buttons */
         .nav-buttons {
             position: absolute;
-            bottom: 20px;
+            bottom: 15px;
             right: 20px;
             z-index: 1000;
             display: flex;
@@ -200,10 +263,10 @@
             backdrop-filter: blur(5px);
             color: inherit;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 10px 15px;
+            padding: 8px 12px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             transition: all 0.3s;
             display: flex;
             align-items: center;
@@ -223,122 +286,128 @@
 
 <body>
     <div class="slide-container">
-        <!-- Background Elements -->
+        <!-- Ambient Shapes -->
         <div class="bg-shape-1"></div>
         <div class="bg-shape-2"></div>
+        <div class="bg-shape-3"></div>
 
-        <!-- Main Content -->
         <div class="content-wrapper">
             <div class="header-section">
                 <div>
                     <h1
-                        class="font-montserrat font-black text-6xl text-white tracking-tight mb-2 uppercase drop-shadow-md">
-                        Mở đầu: ClickHouse là gì?
+                        class="font-montserrat font-black text-4xl text-white tracking-tight mb-1 uppercase drop-shadow-md">
+                        <i class="fab fa-golang text-sky-400"></i> Go Channel & Worker Pool
                     </h1>
-                    <p class="font-open-sans text-xl text-amber-400 font-semibold tracking-wide">
-                        Khám phá sức mạnh của hệ quản trị cơ sở dữ liệu OLAP
+                    <p class="font-open-sans text-lg text-sky-300 font-semibold tracking-wide flex items-center gap-2">
+                        Ví dụ thực chiến: Phân phối tải bằng cơ chế hàng đợi
                     </p>
-                </div>
-                <div class="text-amber-500 text-5xl opacity-80 pb-2">
-                    <i class="fas fa-database"></i>
                 </div>
             </div>
 
-            <div class="main-layout">
-                <!-- Left Column (Concepts) -->
-                <div class="left-col">
-                    <!-- Concept 1 -->
-                    <div class="info-card">
-                        <div class="icon-circle bg-amber-light text-amber-500">
-                            <i class="fas fa-server"></i>
+            <!-- Main Flex/Grid -->
+            <div class="main-grid">
+
+                <!-- Left Column (Explanation & Notes) -->
+                <div class="flex flex-col">
+                    <div class="info-card border-l-4 border-sky-400 border-t-0 border-r-0 border-b-0">
+                        <h3 class="card-title text-sky-300"><i class="fas fa-satellite-dish"></i> Giao tiếp Channel</h3>
+                        <p class="text-slate-300 text-sm mb-3">Channel là cái tẩu (đường ống) kết nối các Goroutine để
+                            truyền dữ liệu một cách an toàn.</p>
+
+                        <div class="syntax-box">
+                            <span class="text-xs text-slate-400 uppercase tracking-wider mb-1 block">1. Đẩy dữ liệu
+                                (Send)</span>
+                            <span class="text-white">ch <span class="syntax-hl-send">&lt;-</span> ev</span><br>
+                            <span class="text-xs text-slate-400 mt-1 block">Bắn biến <code
+                                    class="text-yellow-300">ev</code> vào bên trong channel <code
+                                    class="text-sky-300">ch</code></span>
                         </div>
-                        <div>
-                            <h2 class="text-2xl font-montserrat font-bold text-white mb-2">OLAP Database</h2>
-                            <p class="text-lg text-slate-300 mb-3">
-                                Hệ thống quản trị cơ sở dữ liệu tối ưu cho <strong>phân tích</strong>. Hoàn toàn khác
-                                biệt với các hệ thống OLTP truyền thống như MySQL hay Postgres.
-                            </p>
-                            <span class="pill text-red-300 border-red-400/30">OLAP (Phân tích dữ liệu)</span>
-                            <span class="pill text-slate-400 border-slate-500/30 line-through">OLTP (Sửa/Xóa giao dịch
-                                nhỏ)</span>
+
+                        <div class="syntax-box border-emerald-400">
+                            <span class="text-xs text-slate-400 uppercase tracking-wider mb-1 block">2. Lấy dữ liệu
+                                (Receive)</span>
+                            <span class="text-white">ev <span class="op">:=</span> <span
+                                    class="syntax-hl-recv">&lt;-</span>ch</span><br>
+                            <span class="text-xs text-slate-400 mt-1 block">Hứng dữ liệu từ <code
+                                    class="text-sky-300">ch</code> đổ ra ngoài gán vào biến <code
+                                    class="text-emerald-300">ev</code>.</span>
                         </div>
                     </div>
 
-                    <!-- Concept 2 -->
-                    <div class="info-card blue-border">
-                        <div class="icon-circle bg-blue-light text-blue-400">
-                            <i class="fas fa-bolt"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-2xl font-montserrat font-bold text-white mb-2">Đặc điểm thiết kế & Điểm mạnh
-                            </h2>
-                            <div class="text-lg text-slate-300 leading-relaxed mb-3">
-                                <ul class="list-disc pl-5 space-y-1">
-                                    <li><span class="text-blue-300 font-semibold">Column-oriented:</span> Lưu trữ theo
-                                        dạng cột giúp việc scan siêu tốc.</li>
-                                    <li><span class="text-blue-300 font-semibold">Scalable:</span> Cực nhanh khi xử lý
-                                        dữ liệu từ <code
-                                            class="bg-black/30 px-2 py-0.5 rounded text-yellow-300">GB &rarr; TB &rarr; PB</code>.
-                                    </li>
-                                    <li><span class="text-blue-300 font-semibold">Tối ưu cho:</span> Analytics, Log
-                                        processing, Real-time aggregation.</li>
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="info-card border-l-4 border-amber-400 border-t-0 border-r-0 border-b-0 flex-1">
+                        <h3 class="card-title text-amber-300"><i class="fas fa-cogs"></i> Giải mã luồng Code</h3>
+                        <ul class="list-disc pl-4 text-slate-300 text-sm space-y-2">
+                            <li><strong>Buffered Channel:</strong> <code
+                                    class="bg-black/30 px-1 rounded text-amber-200">make(chan int, 5)</code> tạo đường
+                                ống có độ dài 5. Giúp Producer bắn nhanh hơn mà không bị block ngay lập tức.</li>
+                            <li><strong>Fan-out:</strong> Vòng lặp <code
+                                    class="bg-black/30 px-1 rounded">go worker()</code> nhân bản 3 tiến trình chờ sẵn ở
+                                cổng Channel.</li>
+                            <li><strong>Close & Range:</strong> Vòng lặp <code
+                                    class="bg-black/30 px-1 rounded text-sky-200">range jobs</code> bên trong worker tự
+                                động hút cạn channel cho tới khi Master kích hoạt lệnh <code
+                                    class="bg-black/30 px-1 rounded text-red-300">close(jobs)</code>.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Right Column (Code execution) -->
+                <div class="flex flex-col">
+                    <div class="code-container h-full">
+                        <pre><code><span class="kw">package</span> main
+
+<span class="kw">import</span> (
+    <span class="str">"fmt"</span>
+    <span class="str">"time"</span>
+)
+
+<span class="kw">func</span> <span class="fn">worker</span>(<span class="hl">id</span> <span class="dt">int</span>, <span class="hl">jobs</span> <span class="dt">&lt;-chan int</span>) {
+    <span class="kw">for</span> <span class="hl">job</span> <span class="op">:=</span> <span class="kw">range</span> <span class="hl">jobs</span> {
+        fmt.<span class="fn">Printf</span>(<span class="str">"Worker %d xử lý job %d\n"</span>, <span class="hl">id</span>, <span class="hl">job</span>)
+        time.<span class="fn">Sleep</span>(<span class="num">1</span> <span class="op">*</span> time.Second)
+    }
+}
+
+<span class="kw">func</span> <span class="fn">main</span>() {
+    <span class="cm">// Tạo Buffered Channel có sức chứa 5 slot</span>
+    <span class="hl">jobs</span> <span class="op">:=</span> <span class="fn">make</span>(<span class="kw">chan</span> <span class="dt">int</span>, <span class="num">5</span>)
+
+    <span class="cm">// Spawn 3 tiến trình worker ngậm sẵn channel này</span>
+    <span class="kw">for</span> <span class="hl">i</span> <span class="op">:=</span> <span class="num">0</span>; <span class="hl">i</span> <span class="op"><</span> <span class="num">3</span>; <span class="hl">i</span><span class="op">++</span> {
+        <span class="kw">go</span> <span class="fn">worker</span>(<span class="hl">i</span>, <span class="hl">jobs</span>)
+    }
+
+    <span class="cm">// Đẩy dữ liệu (Push) liên tục 10 jobs vào channel</span>
+    <span class="kw">for</span> <span class="hl">i</span> <span class="op">:=</span> <span class="num">1</span>; <span class="hl">i</span> <span class="op">&lt;=</span> <span class="num">10</span>; <span class="hl">i</span><span class="op">++</span> {
+        <span class="hl">jobs</span> <span class="syntax-hl-send">&lt;-</span> <span class="hl">i</span>  <span class="cm">// Send operation</span>
+    }
+
+    <span class="cm">// Báo hiệu không còn job nào được gửi nữa</span>
+    <span class="fn">close</span>(<span class="hl">jobs</span>)
+
+    <span class="cm">// Đợi các worker hoàn tất (giải pháp demo, thực tế nên dùng WaitGroup)</span>
+    time.<span class="fn">Sleep</span>(<span class="num">5</span> <span class="op">*</span> time.Second)
+}</code></pre>
                     </div>
                 </div>
 
-                <!-- Right Column (Use Cases) -->
-                <div class="right-col">
-                    <h3 class="text-2xl font-montserrat font-bold text-amber-400 mb-6 flex items-center">
-                        <i class="fas fa-lightbulb mr-3"></i> Ví dụ Thực tế
-                    </h3>
-
-                    <div class="flex-1 flex flex-col justify-center">
-                        <div class="example-item">
-                            <div class="w-12 text-center"><i class="fas fa-globe"></i></div>
-                            <div>
-                                <h4 class="text-xl font-bold text-white">Log DNS & HTTP</h4>
-                                <p class="text-sm text-slate-400">Lưu vết và phân tích traffic khổng lồ trên diện rộng
-                                    mạng</p>
-                            </div>
-                        </div>
-
-                        <div class="example-item">
-                            <div class="w-12 text-center"><i class="fas fa-heart-pulse"></i></div>
-                            <div>
-                                <h4 class="text-xl font-bold text-white">Hệ thống Monitoring</h4>
-                                <p class="text-sm text-slate-400">Theo dõi metric và cảnh báo sự cố (như cấu trúc
-                                    Prometheus)</p>
-                            </div>
-                        </div>
-
-                        <div class="example-item">
-                            <div class="w-12 text-center"><i class="fas fa-chart-pie"></i></div>
-                            <div>
-                                <h4 class="text-xl font-bold text-white">BI Dashboard</h4>
-                                <p class="text-sm text-slate-400">Business Intelligence hiển thị mọi cập nhật theo thời
-                                    gian thực</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <!-- Navigation -->
+        <!-- Navigation Buttons -->
         <div class="nav-buttons">
             <button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i> Trước</button>
             <button id="nextBtn" class="nav-btn">Tiếp <i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
 
-    <!-- Navigation Script -->
+    <!-- Script Navigation -->
     <script>
         const slides = [
             "index.html", "slide1.html", "slide2.html", "slide3.html", "slide4.html",
             "slide5.html", "slide6.html", "slide7.html", "slide8.html", "slide9.html",
-            "slide10.html", "slide11.html", "slide12.html", "slide13.html", "slide14.html"
+            "slide10.html", "slide11.html", "slide12.html", "slide13.html", "slide14.html",
+            "slide15.html", "slide16.html"
         ];
         let currentFile = window.location.pathname.split('/').pop();
         if (!currentFile) currentFile = "index.html";

@@ -228,7 +228,7 @@
                     <div class="card-icon">
                         <i class="fas fa-gauge-high"></i>
                     </div>
-                    <h2 class="font-montserrat font-bold text-3xl text-white mb-6">Giảm bớt Áp lực Tối ưu</h2>
+                    <h2 class="font-montserrat font-bold text-3xl text-white mb-6">Giảm bớt áp lực tối ưu</h2>
                     <p class="font-open-sans text-xl text-emerald-100 leading-relaxed mb-6">
                         "Go giảm áp lực optimize sớm"
                     </p>
@@ -237,7 +237,7 @@
                     </p>
                     <div class="mt-auto pt-6 w-full">
                         <p class="text-sm font-mono bg-black bg-opacity-20 py-2 px-3 rounded text-emerald-300">
-                            <i class="fas fa-check mr-2"></i>Đỉnh cao Hiệu năng
+                            <i class="fas fa-check mr-2"></i>Đỉnh cao hiệu năng
                         </p>
                     </div>
                 </div>
@@ -246,7 +246,7 @@
                     <div class="card-icon">
                         <i class="fas fa-pencil-ruler"></i>
                     </div>
-                    <h2 class="font-montserrat font-bold text-3xl text-white mb-6">Tập trung vào Thiết kế</h2>
+                    <h2 class="font-montserrat font-bold text-3xl text-white mb-6">Tập trung vào thiết kế</h2>
                     <p class="font-open-sans text-xl text-emerald-100 leading-relaxed mb-6">
                         "Focus vào design"
                     </p>
@@ -273,6 +273,7 @@
             display: flex;
             gap: 10px;
         }
+
         .nav-btn {
             background-color: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(5px);
@@ -287,23 +288,34 @@
             align-items: center;
             gap: 8px;
         }
+
         .nav-btn i {
             font-size: 14px;
         }
+
         .nav-btn:hover {
             background-color: rgba(255, 255, 255, 0.4);
         }
+
         .nav-btn:disabled {
             opacity: 0.3;
             cursor: not-allowed;
         }
+
         /* Handle light background slides by darkening buttons slightly */
-        .content-wrapper > .text-white, body[style*="f1f5f9"] .nav-btn, body[style*="f8fafc"] .nav-btn, .bg-slate-50 .nav-btn {
+        .content-wrapper>.text-white,
+        body[style*="f1f5f9"] .nav-btn,
+        body[style*="f8fafc"] .nav-btn,
+        .bg-slate-50 .nav-btn {
             background-color: rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(0, 0, 0, 0.2);
             color: #1e293b;
         }
-        .content-wrapper > .text-white:hover, body[style*="f1f5f9"] .nav-btn:hover, body[style*="f8fafc"] .nav-btn:hover, .bg-slate-50 .nav-btn:hover {
+
+        .content-wrapper>.text-white:hover,
+        body[style*="f1f5f9"] .nav-btn:hover,
+        body[style*="f8fafc"] .nav-btn:hover,
+        .bg-slate-50 .nav-btn:hover {
             background-color: rgba(0, 0, 0, 0.2);
         }
     </style>
@@ -314,31 +326,31 @@
     <script>
         const slides = ["index.html", "slide1.html", "slide2.html", "slide3.html", "slide4.html", "slide5.html", "slide6.html", "slide7.html", "slide8.html", "slide9.html", "slide10.html", "slide12.html", "slide13.html", "slide14.html", "slide15.html"];
         let currentFile = window.location.pathname.split('/').pop();
-        if(!currentFile) currentFile = "index.html";
+        if (!currentFile) currentFile = "index.html";
         let currentIndex = slides.indexOf(currentFile);
-        
+
         const prevBtn = document.getElementById("prevBtn");
         const nextBtn = document.getElementById("nextBtn");
-        
-        if(currentIndex <= 0) prevBtn.disabled = true;
-        if(currentIndex >= slides.length - 1 || currentIndex === -1) nextBtn.disabled = true;
-        
+
+        if (currentIndex <= 0) prevBtn.disabled = true;
+        if (currentIndex >= slides.length - 1 || currentIndex === -1) nextBtn.disabled = true;
+
         prevBtn.addEventListener("click", () => {
-            if(currentIndex > 0) window.location.href = slides[currentIndex - 1];
+            if (currentIndex > 0) window.location.href = slides[currentIndex - 1];
         });
-        
+
         nextBtn.addEventListener("click", () => {
-            if(currentIndex > -1 && currentIndex < slides.length - 1) window.location.href = slides[currentIndex + 1];
+            if (currentIndex > -1 && currentIndex < slides.length - 1) window.location.href = slides[currentIndex + 1];
         });
-        
+
         document.addEventListener("keydown", (e) => {
-            if(e.key === "ArrowLeft" && currentIndex > 0) {
+            if (e.key === "ArrowLeft" && currentIndex > 0) {
                 window.location.href = slides[currentIndex - 1];
             } else if (e.key === "ArrowRight" && currentIndex > -1 && currentIndex < slides.length - 1) {
                 window.location.href = slides[currentIndex + 1];
             }
         });
-    
+
         function resizeSlide() {
             const container = document.querySelector('.slide-container');
             if (container) {
@@ -348,7 +360,7 @@
         }
         window.addEventListener('resize', resizeSlide);
         resizeSlide();
-</script>
+    </script>
 </body>
 
 </html>

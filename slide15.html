@@ -4,330 +4,451 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Goroutine Pool (Worker Pool)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+    <title>DEMO: AggregatingMergeTree</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
     <style>
         body {
-            margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden;
-            font-family: 'Open Sans', sans-serif; background-color: #0f172a; /* Slate 900 */
-            display: flex; justify-content: center; align-items: center;
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .slide-container {
-            width: 1280px; height: 720px; display: flex; position: relative;
-            background-color: #1e293b; color: white; overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transform-origin: center center;
+            width: 1280px;
+            height: 720px;
+            display: flex;
+            position: relative;
+            background-color: #1e293b;
+            color: white;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform-origin: center center;
             flex-direction: column;
         }
 
-        /* Ambient Shapes for Go Theme (Blue/Cyan/Sky) */
-        .bg-shape-1 { position: absolute; top: -100px; left: -100px; width: 700px; height: 700px; background-color: #0ea5e9; filter: blur(150px); border-radius: 50%; opacity: 0.15; z-index: 0; }
-        .bg-shape-2 { position: absolute; bottom: -200px; right: -50px; width: 800px; height: 800px; background-color: #38bdf8; filter: blur(160px); border-radius: 50%; opacity: 0.12; z-index: 0; }
-        .bg-shape-3 { position: absolute; top: 30%; right: 40%; width: 400px; height: 400px; background-color: #fbbf24; filter: blur(150px); border-radius: 50%; opacity: 0.1; z-index: 0; }
+        /* Ambient Shapes */
+        .bg-shape-1 {
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 700px;
+            height: 700px;
+            background-color: #065f46;
+            /* Emerald 800 */
+            filter: blur(120px);
+            border-radius: 50%;
+            opacity: 0.2;
+            z-index: 0;
+        }
+
+        .bg-shape-2 {
+            position: absolute;
+            bottom: -150px;
+            right: -100px;
+            width: 600px;
+            height: 600px;
+            background-color: #b45309;
+            /* Amber 800 */
+            filter: blur(120px);
+            border-radius: 50%;
+            opacity: 0.15;
+            z-index: 0;
+        }
 
         .content-wrapper {
-            flex: 1; display: flex; flex-direction: column; padding: 30px 50px; z-index: 10; height: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 50px;
+            z-index: 10;
+            height: 100%;
         }
 
         .header-section {
-            display: flex; align-items: flex-end; justify-content: space-between;
-            margin-bottom: 25px; border-bottom: 2px solid rgba(255, 255, 255, 0.1); padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 25px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
         }
 
-        /* Main Grid Split */
-        .main-grid {
+        .grid-layout {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
             flex: 1;
+            align-items: start;
+            min-height: 0;
+            /* Important for scroll */
             overflow-y: auto;
             padding-right: 15px;
-            padding-bottom: 25px;
+            padding-bottom: 30px;
         }
 
         /* Tùy chỉnh thanh cuộn cho đẹp với nền Dark */
-        .main-grid::-webkit-scrollbar {
+        .grid-layout::-webkit-scrollbar {
             width: 8px;
         }
-        .main-grid::-webkit-scrollbar-track {
+
+        .grid-layout::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 4px;
         }
-        .main-grid::-webkit-scrollbar-thumb {
+
+        .grid-layout::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.2);
             border-radius: 4px;
         }
-        .main-grid::-webkit-scrollbar-thumb:hover {
+
+        .grid-layout::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.3);
         }
 
-        /* Information Cards */
-        .info-card {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
-            border-left: 4px solid;
+        /* Code Cards */
+        .code-block {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            position: relative;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
-        .card-title {
+        .code-title {
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
-            font-size: 18px;
-            margin-bottom: 15px;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #34d399;
+            /* Emerald 400 */
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .ul-styled {
-            list-style: none; padding: 0; margin: 0;
-        }
-        .ul-styled li {
-            position: relative; padding-left: 20px; margin-bottom: 10px; color: #cbd5e1; font-size: 14.5px;
-        }
-        .ul-styled li::before {
-            content: '\f0da'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
-            position: absolute; left: 0; color: #64748b;
+        .code-title.amber {
+            color: #fbbf24;
         }
 
-        .check-list li::before {
-            content: '\f058'; color: #34d399; /* emerald 400 */
+        .code-title.orange {
+            color: #f97316;
         }
 
-        /* Model Drawing Section */
-        .drawing-box {
-            background: rgba(0,0,0,0.2);
-            border: 1px dashed rgba(255,255,255,0.2);
-            border-radius: 12px;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .q-box {
-            background: rgba(250, 204, 21, 0.2);
-            border: 1px solid #facc15;
-            color: #fde047;
-            padding: 8px 30px;
-            border-radius: 8px;
-            font-weight: bold;
-            display: flex; align-items: center; gap: 8px;
-            width: 80%; justify-content: center;
-        }
-
-        .worker-row {
-            display: flex; gap: 15px; width: 80%; justify-content: space-between; margin: 5px 0;
-        }
-
-        .w-item {
-            background: rgba(14, 165, 233, 0.2);
-            border: 1px solid #38bdf8;
-            color: #bae6fd;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 13px;
-            text-align: center;
-            flex: 1;
-        }
-
-        .process-box {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid #34d399;
-            color: #a7f3d0;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            width: 80%; text-align: center;
-        }
-
-        .down-arrows {
-            display: flex; width: 80%; justify-content: space-around; color: rgba(255,255,255,0.3);
-            margin: 5px 0; font-size: 14px;
-        }
-
-        /* Code Block */
-        .code-container {
-            background: #282c34;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: inset 0 2px 10px rgba(0,0,0, 0.2);
-            border: 1px solid rgba(255,255,255,0.1);
-            position: relative;
-        }
-
-        .code-container::before {
-            content: 'main.go';
-            position: absolute; top: -12px; right: 20px;
-            background: #38bdf8; color: #0f172a; padding: 2px 10px;
-            border-radius: 4px; font-weight: bold; font-size: 12px;
+        .code-title.blue {
+            color: #38bdf8;
         }
 
         pre {
             font-family: 'Fira Code', monospace;
-            font-size: 13.5px;
-            line-height: 1.5;
-            color: #abb2bf;
+            font-size: 13px;
+            line-height: 1.4;
+            color: #e2e8f0;
             margin: 0;
-            tab-size: 4;
+            overflow-x: auto;
+            flex: 1;
         }
 
-        /* Go Syntax Colors */
-        .kw { color: #c678dd; font-weight: bold; } /* Keywords (for, func, go, chan) */
-        .fn { color: #61afef; } /* Functions (make, fmt.Printf, close) */
-        .dt { color: #e5c07b; } /* Data types (int) */
-        .str { color: #98c379; } /* Strings */
-        .num { color: #d19a66; } /* Numbers */
-        .cm { color: #7f848e; font-style: italic; } /* Comments */
-        .op { color: #56b6c2; } /* Operators */
-        
-        .hl { color: #e06c75; font-weight: bold; } /* Target / Vars */
+        /* Syntax highlighting */
+        .kw {
+            color: #c678dd;
+            font-weight: bold;
+        }
+
+        /* Keyword */
+        .fn {
+            color: #61afef;
+        }
+
+        /* Function */
+        .dt {
+            color: #e5c07b;
+        }
+
+        /* DataType */
+        .sy {
+            color: #56b6c2;
+        }
+
+        /* Symbol */
+
+        /* Annotations bottom */
+        .annotation {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-top: 10px;
+            border-left: 3px solid #34d399;
+        }
+
+        /* Right column items */
+        .target-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+
+        .perf-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-top: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .perf-table th {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 10px;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        .perf-table td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
+        }
+
+        /* Flow Arrow */
+        .flow-arrow {
+            display: flex;
+            justify-content: center;
+            color: #475569;
+            font-size: 20px;
+            margin: 5px 0;
+        }
+
+        .grid-left {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .grid-right {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Upgrade tip */
+        .pro-tip {
+            border: 1px dashed rgba(250, 204, 21, 0.4);
+            background: rgba(250, 204, 21, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+        }
 
         /* Nav buttons */
-        .nav-buttons { position: absolute; bottom: 15px; right: 20px; z-index: 1000; display: flex; gap: 10px; }
-        .nav-btn { background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(5px); color: inherit; border: 1px solid rgba(255, 255, 255, 0.3); padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 14px; transition: all 0.3s; display: flex; align-items: center; gap: 8px; }
-        .nav-btn:hover { background-color: rgba(255, 255, 255, 0.4); }
-        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .nav-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            color: inherit;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 
 <body>
     <div class="slide-container">
-        <!-- Ambient Shapes -->
+        <!-- Background Elements -->
         <div class="bg-shape-1"></div>
         <div class="bg-shape-2"></div>
-        <div class="bg-shape-3"></div>
 
+        <!-- Main Content -->
         <div class="content-wrapper">
             <div class="header-section">
                 <div>
-                    <h1 class="font-montserrat font-black text-5xl text-white tracking-tight mb-1 uppercase drop-shadow-md">
-                        <i class="fab fa-golang text-sky-400"></i> Goroutine Pool
+                    <h1
+                        class="font-montserrat font-black text-5xl text-white tracking-tight mb-2 uppercase drop-shadow-md">
+                        <i class="fas fa-flask text-emerald-400 mr-2"></i> DEMO: Cơ chế Aggregating
                     </h1>
-                    <p class="font-open-sans text-xl text-sky-300 font-semibold tracking-wide flex items-center gap-2">
-                        Kiểm soát Concurrency với Worker Pool
+                    <p class="font-open-sans text-lg text-emerald-300 font-semibold tracking-wide">
+                        DNS Log &rarr; Materialized View &rarr; AggregatingMergeTree
                     </p>
-                </div>
-                <div class="text-right">
-                    <span class="bg-sky-500/20 text-sky-200 border border-sky-500/30 px-4 py-2 rounded-lg text-sm font-bold shadow-lg">
-                        Concurrency Architecture
-                    </span>
                 </div>
             </div>
 
-            <!-- Main Flex/Grid -->
-            <div class="main-grid">
-                
-                <!-- Left Column (Problem, Solution, Benefits) -->
-                <div class="flex flex-col">
-                    <div class="info-card border-red-500">
-                        <h3 class="card-title text-red-400"><i class="fas fa-lightbulb"></i> Bài toán</h3>
-                        <ul class="ul-styled text-slate-200">
-                            <li>Hệ thống có rất nhiều job đẩy về liên tục.</li>
-                            <li>Không thể <span class="text-red-300 font-bold">spawn vô hạn</span> goroutine (gây tràn RAM, sập HĐH).</li>
-                            <li>Cần giới hạn concurrency (đồng thời).</li>
-                            <li>Phải tránh Overload hệ thống downstream như DB, 3rd API.</li>
-                        </ul>
-                    </div>
-
-                    <div class="info-card border-amber-400">
-                        <h3 class="card-title text-amber-300"><i class="fas fa-rocket"></i> Giải pháp</h3>
-                        <div class="bg-amber-500/10 p-4 rounded-lg border border-amber-500/20 text-amber-100 flex items-center gap-3">
-                            <i class="fas fa-hand-point-right text-2xl text-amber-400 animate-pulse"></i>
-                            <div>
-                                <strong class="text-lg">Goroutine Worker Pool</strong><br>
-                                <span class="text-sm">Tạo sẵn N worker cố định và phân phối job cho chúng thông qua Channel.</span>
-                            </div>
+            <div class="grid-layout">
+                <!-- Left Column (The Architecture / Schema) -->
+                <div class="grid-left">
+                    <!-- Step 1.1 -->
+                    <div class="code-block">
+                        <h3 class="code-title"><i class="fas fa-table"></i> 1.1 Raw table (log DNS)</h3>
+                        <pre><code><span class="kw">CREATE TABLE</span> dns_log (
+    timestamp <span class="dt">DateTime</span>,
+    client_ip <span class="dt">String</span>,
+    domain <span class="dt">String</span>,
+    rcode <span class="dt">UInt8</span>
+)
+<span class="kw">ENGINE</span> <span class="sy">=</span> MergeTree
+<span class="kw">ORDER BY</span> (domain, timestamp);</code></pre>
+                        <div class="annotation border-l-emerald-400 text-emerald-100">
+                            👉 Đây là table ingest log (append-only)
                         </div>
                     </div>
 
-                    <div class="info-card border-emerald-500 flex-1">
-                        <h3 class="card-title text-emerald-400"><i class="fas fa-fire"></i> Key Benefits</h3>
-                        <ul class="ul-styled check-list text-slate-200" style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                            <li>Giới hạn số lượng Goroutine chạy đồng thời.</li>
-                            <li>Tận dụng sức mạnh CPU cực kỳ hiệu quả.</li>
-                            <li>Tránh Overload DB / API (rate limit tự nhiên).</li>
-                            <li>Code tường minh, dễ dàng testing và maintain.</li>
-                        </ul>
+                    <div class="flow-arrow"><i class="fas fa-arrow-down"></i></div>
+
+                    <!-- Step 1.2 MV -->
+                    <div class="code-block" style="border-color: rgba(249, 115, 22, 0.3)">
+                        <h3 class="code-title orange"><i class="fas fa-fire"></i> 1.2 Materialized View</h3>
+                        <pre><code><span class="kw">CREATE MATERIALIZED VIEW</span> mv_dns_agg
+<span class="kw">TO</span> dns_agg <span class="kw">AS</span>
+<span class="kw">SELECT</span>
+    domain,
+    <span class="fn">countState</span>() <span class="kw">AS</span> total_query,
+    <span class="fn">countIfState</span>(rcode <span class="sy">!=</span> 0) <span class="kw">AS</span> error_query
+<span class="kw">FROM</span> dns_log <span class="kw">GROUP BY</span> domain;</code></pre>
+                        <div class="annotation" style="border-left-color: #f97316; color: #ffedd5;">
+                            👉 Mỗi lần insert raw &rarr; MV kích hoạt &rarr; insert <strong>state</strong>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow"><i class="fas fa-arrow-down"></i></div>
+
+                    <!-- Step 1.3 Agg -->
+                    <div class="code-block" style="border-color: rgba(251, 191, 36, 0.3)">
+                        <h3 class="code-title amber"><i class="fas fa-bolt"></i> 1.3 Aggregation Table (Đích)</h3>
+                        <pre><code><span class="kw">CREATE TABLE</span> dns_agg (
+    domain <span class="dt">String</span>,
+    total_query <span class="dt">AggregateFunction</span>(count),
+    error_query <span class="dt">AggregateFunction</span>(countIf, <span class="dt">UInt8</span>)
+)
+<span class="kw">ENGINE</span> <span class="sy">=</span> AggregatingMergeTree()
+<span class="kw">ORDER BY</span> domain;</code></pre>
+                        <div class="annotation" style="border-left-color: #fbbf24; color: #fef3c7;">
+                            👉 Lưu <strong>state</strong> dạng nhị phân, không phải giá trị (value)
+                        </div>
                     </div>
                 </div>
 
-                <!-- Right Column (Diagram & Code) -->
-                <div class="flex flex-col">
-                    
-                    <h3 class="font-montserrat font-bold text-lg text-white mb-3 flex items-center gap-2">
-                        <i class="fas fa-project-diagram text-sky-400"></i> Mô hình hoạt động
-                    </h3>
-                    <div class="drawing-box">
-                        <div class="q-box"><i class="fas fa-layer-group"></i> Jobs Queue (Channel)</div>
-                        <div class="down-arrows">
-                            <i class="fas fa-arrow-down"></i> <i class="fas fa-arrow-down"></i> <i class="fas fa-arrow-down"></i> <i class="fas fa-arrow-down"></i>
-                        </div>
-                        <div class="worker-row">
-                            <div class="w-item">Worker 1</div>
-                            <div class="w-item">Worker 2</div>
-                            <div class="w-item">Worker 3</div>
-                            <div class="w-item">Worker N</div>
-                        </div>
-                        <div class="down-arrows">
-                            <i class="fas fa-arrow-down"></i> <i class="fas fa-arrow-down"></i> <i class="fas fa-arrow-down"></i> <i class="fas fa-arrow-down"></i>
-                        </div>
-                        <div class="process-box">
-                            <i class="fas fa-cogs"></i> Xử lý tính toán & ghi nhận Data song song
-                        </div>
+                <!-- Right Column (Goals, Queries, Insight) -->
+                <div class="grid-right">
+
+                    <div class="target-card">
+                        <h3 class="font-montserrat font-bold text-xl text-white mb-3">
+                            <i class="fas fa-bullseye text-red-400 mr-2"></i> Mục tiêu
+                        </h3>
+                        <ul class="list-disc pl-5 text-slate-300 space-y-2">
+                            <li>Đếm số query theo <code class="text-amber-300">domain</code>.</li>
+                            <li>Đếm số lỗi (<code class="text-amber-300">rcode != 0</code>).</li>
+                            <li>Xây dựng Dashboard Realtime <span
+                                    class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded text-sm">(Query <
+                                        100ms)</span>
+                            </li>
+                        </ul>
                     </div>
 
-                    <h3 class="font-montserrat font-bold text-lg text-white mb-3 mt-1 flex items-center gap-2">
-                        <i class="fas fa-laptop-code text-fuchsia-400"></i> Code minh họa
-                    </h3>
-                    <div class="code-container">
-<pre><code><span class="hl">jobs</span> <span class="op">:=</span> <span class="fn">make</span>(<span class="kw">chan</span> <span class="dt">int</span>, <span class="num">100</span>)
+                    <!-- Step 1.4 -->
+                    <div class="code-block" style="height: auto; border-color: rgba(56, 189, 248, 0.3)">
+                        <h3 class="code-title blue"><i class="fas fa-chart-bar"></i> 1.4 Query Dashboard</h3>
+                        <pre><code><span class="kw">SELECT</span>
+    domain,
+    <span class="fn">countMerge</span>(total_query) <span class="kw">AS</span> total,
+    <span class="fn">countIfMerge</span>(error_query) <span class="kw">AS</span> errors
+<span class="kw">FROM</span> dns_agg
+<span class="kw">GROUP BY</span> domain <span class="kw">ORDER BY</span> total <span class="kw">DESC LIMIT</span> 10;</code></pre>
+                    </div>
 
-<span class="cm">// Khởi tạo worker logic</span>
-<span class="hl">worker</span> <span class="op">:=</span> <span class="kw">func</span>(<span class="hl">id</span> <span class="dt">int</span>) {
-    <span class="kw">for</span> <span class="hl">job</span> <span class="op">:=</span> <span class="kw">range</span> <span class="hl">jobs</span> {
-        fmt.<span class="fn">Printf</span>(<span class="str">"Worker %d processing job %d\n"</span>, <span class="hl">id</span>, <span class="hl">job</span>)
-    }
-}
+                    <!-- Step 1.5 Insight -->
+                    <div class="target-card" style="margin-bottom: 0;">
+                        <h3 class="font-montserrat font-bold text-xl text-white mb-2">
+                            <i class="fas fa-rocket text-sky-400 mr-2"></i> 1.5 Chuyện gì xảy ra phía sau?
+                        </h3>
+                        <div class="text-sm text-slate-300 mb-3 font-semibold pb-2 border-b border-slate-700">
+                            Insert log &rarr; MV transform &rarr; Lưu State &rarr; Background Merge &rarr; Query
+                        </div>
+                        <p class="text-sm text-emerald-300 font-bold mb-1"><i class="fas fa-chart-line"></i> Performance
+                            Insight:</p>
+                        <table class="perf-table">
+                            <tr>
+                                <th>Phương pháp</th>
+                                <th>Độ trễ</th>
+                            </tr>
+                            <tr>
+                                <td>GROUP BY trên Raw Log</td>
+                                <td><span class="text-red-400 font-bold">Chậm</span> (Scan toàn bộ)</td>
+                            </tr>
+                            <tr>
+                                <td>Dùng AggregatingMergeTree</td>
+                                <td><span class="text-emerald-400 font-bold">Rất nhanh</span> (Merge states)</td>
+                            </tr>
+                        </table>
 
-<span class="cm">// Tạo Worker Pool (Bật 3 worker chạy nềnn)</span>
-<span class="kw">for</span> <span class="hl">i</span> <span class="op">:=</span> <span class="num">0</span>; <span class="hl">i</span> <span class="op"><</span> <span class="num">3</span>; <span class="hl">i</span><span class="op">++</span> {
-    <span class="kw">go</span> <span class="hl">worker</span>(<span class="hl">i</span>)
-}
-
-<span class="cm">// Bắn 10 Jobs vào Queue</span>
-<span class="kw">for</span> <span class="hl">i</span> <span class="op">:=</span> <span class="num">1</span>; <span class="hl">i</span> <span class="op"><=</span> <span class="num">10</span>; <span class="hl">i</span><span class="op">++</span> {
-    <span class="hl">jobs</span> <span class="op"><-</span> <span class="hl">i</span>
-}
-<span class="fn">close</span>(<span class="hl">jobs</span>)</code></pre>
+                        <div class="pro-tip mt-4 text-sm text-slate-300">
+                            <strong class="text-yellow-400"><i class="fas fa-lightbulb"></i> Pro Level:</strong> Thêm
+                            <code class="text-white">PARTITION BY toDate(timestamp)</code> để gom cụm theo ngày (phù hợp
+                            Log System).
+                        </div>
                     </div>
 
                 </div>
-
             </div>
         </div>
 
-        <!-- Navigation Buttons -->
+        <!-- Navigation -->
         <div class="nav-buttons">
             <button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i> Trước</button>
             <button id="nextBtn" class="nav-btn">Tiếp <i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
 
-    <!-- Script Navigation -->
+    <!-- Navigation JS -->
     <script>
         const slides = [
             "index.html", "slide1.html", "slide2.html", "slide3.html", "slide4.html",
             "slide5.html", "slide6.html", "slide7.html", "slide8.html", "slide9.html",
-            "slide10.html", "slide11.html", "slide12.html", "slide13.html", "slide14.html", "slide15.html"
+            "slide10.html", "slide11.html", "slide13.html", "slide14.html", "slide15.html",
+            "slide16.html", "slide17.html", "slide18.html"
         ];
         let currentFile = window.location.pathname.split('/').pop();
         if (!currentFile) currentFile = "index.html";

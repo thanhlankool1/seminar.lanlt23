@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Thử thách</title>
+    <title>Hạn chế</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&amp;family=Open+Sans:wght@400;600;700&amp;display=swap"
         rel="stylesheet" />
@@ -70,9 +70,9 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
             background-size: 40px 40px;
-            opacity: 0.5;
+            opacity: 0.2;
             z-index: 1;
         }
 
@@ -82,9 +82,8 @@
             right: 50px;
             bottom: -50px;
             font-size: 400px;
-            color: #818cf8;
-            /* Indigo 400 */
-            opacity: 0.06;
+            color: #000000;
+            opacity: 0.1;
             transform: rotate(-15deg);
             z-index: 1;
         }
@@ -97,7 +96,7 @@
             z-index: 10;
         }
 
-        /* Glassmorphism Card Style - Dark Theme */
+        /* Glassmorphism Card Style */
         .alert-card {
             background-color: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
@@ -108,16 +107,8 @@
             margin-bottom: 30px;
             display: flex;
             align-items: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(129, 140, 248, 0.1);
-            border-left-width: 10px;
-        }
-
-        .alert-card:hover {
-            transform: translateX(10px);
-            background-color: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 30px -10px rgba(129, 140, 248, 0.2);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
 
         .alert-card.critical {
@@ -132,14 +123,13 @@
         .icon-container {
             width: 80px;
             height: 80px;
-            border-radius: 20px;
-            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.15);
             display: flex;
             justify-content: center;
             align-items: center;
             margin-right: 30px;
             flex-shrink: 0;
-            border: 1px solid rgba(129, 140, 248, 0.15);
         }
     </style>
 </head>
@@ -151,23 +141,23 @@
         <div class="bg-shape-2"></div>
         <div class="bg-grid"></div>
         <div class="watermark-icon">
-            <i class="fas fa-exclamation-triangle"></i>
+            <i class="fas fa-exclamation-circle"></i>
         </div>
         <!-- Main Content -->
         <div class="content-wrapper">
             <!-- Header -->
-            <div class="mb-12 border-b pb-6 flex items-center justify-between"
-                style="border-color: rgba(129,140,248,0.2);">
+            <div class="mb-12 border-b border-white border-opacity-20 pb-6 flex items-center justify-between">
                 <div>
-                    <h1 class="font-montserrat font-black text-6xl text-white tracking-tight mb-2 uppercase">
-                        Thử thách
+                    <h1
+                        class="font-montserrat font-black text-6xl text-white tracking-tight mb-2 uppercase drop-shadow-lg">
+                        Hạn chế và rủi ro
                     </h1>
                     <p class="font-open-sans text-xl text-indigo-300 font-semibold tracking-wide">
-                        <i class="fas fa-search-dollar mr-2"></i>Điểm nghẽn hiệu suất
+                        <i class="fas fa-brain mr-2"></i>Critical Constraints &amp; Rủi ro
                     </p>
                 </div>
                 <div class="text-6xl text-indigo-400 opacity-80">
-                    <i class="fas fa-triangle-exclamation"></i>
+                    <i class="fas fa-exclamation-triangle"></i>
                 </div>
             </div>
             <!-- List Points -->
@@ -175,37 +165,36 @@
                 <!-- Point 1 -->
                 <div class="alert-card">
                     <div class="icon-container">
-                        <i class="fas fa-tachometer-alt text-4xl text-indigo-300"></i>
+                        <i class="fas fa-pencil-ruler text-4xl text-indigo-300"></i>
                     </div>
                     <div>
-                        <p class="font-montserrat font-bold text-3xl mb-1">Thông lượng cao</p>
-                        <p class="font-open-sans text-lg text-slate-300">Hệ thống cần xử lý lượng request khổng lồ một
-                            cách hiệu quả</p>
+                        <p class="font-montserrat font-bold text-3xl mb-1">Không tốt design</p>
+                        <p class="font-open-sans text-lg text-gray-200 opacity-90"></p>
                     </div>
                 </div>
                 <!-- Point 2 -->
-                <div class="alert-card mt-6">
+                <div class="alert-card">
                     <div class="icon-container">
-                        <i class="fas fa-clock text-4xl text-indigo-300"></i>
+                        <i class="fas fa-tachometer-alt-fast text-4xl text-blue-300"></i>
                     </div>
                     <div>
-                        <p class="font-montserrat font-bold text-3xl mb-1">Thời gian phát triển</p>
-                        <p class="font-open-sans text-lg text-slate-300">Cần có sản phẩm nhanh nhất để kiểm chứng</p>
+                        <p class="font-montserrat font-bold text-3xl mb-1">Phụ thuộc AI</p>
+                        <p class="font-open-sans text-lg text-gray-200 opacity-90"></p>
                     </div>
                 </div>
                 <!-- Point 3 (Critical) -->
                 <div class="alert-card critical">
                     <div class="icon-container" style="background-color: rgba(139, 92, 246, 0.2);">
                         <div class="relative">
-                            <i class="fab fa-python text-4xl text-violet-300"></i>
+                            <i class="fas fa-graduation-cap text-4xl text-violet-300"></i>
                             <i
-                                class="fas fa-ban absolute -top-3 -right-3 text-violet-400 text-2xl bg-slate-800 rounded-full border-2 border-slate-700"></i>
+                                class="fas fa-exclamation absolute -top-3 -right-3 text-violet-400 text-2xl bg-slate-800 rounded-full border-2 border-slate-700 w-8 h-8 flex items-center justify-center"></i>
                         </div>
                     </div>
                     <div>
-                        <p class="font-montserrat font-bold text-3xl mb-1 text-violet-200">Python bắt đầu bottleneck</p>
-                        <p class="font-open-sans text-lg text-slate-300 opacity-90">Hạn chế của GIL và async overhead
-                            làm giảm khả năng mở rộng</p>
+                        <p class="font-montserrat font-bold text-3xl mb-1 text-violet-200">Cần hiểu bản chất</p>
+                        <p class="font-open-sans text-lg text-slate-300 opacity-90">Phải hiểu nguyên nhân, bản chất để
+                            khắc phục sai lầm của AI</p>
                     </div>
                 </div>
             </div>
@@ -300,11 +289,12 @@
             }
         });
 
-        // Responsive scaling script
         function resizeSlide() {
             const container = document.querySelector('.slide-container');
-            const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
-            container.style.transform = `scale(${scale})`;
+            if (container) {
+                const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+                container.style.transform = `scale(${scale})`;
+            }
         }
         window.addEventListener('resize', resizeSlide);
         resizeSlide();

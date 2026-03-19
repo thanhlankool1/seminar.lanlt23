@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>DEMO: AggregatingMergeTree</title>
+    <title>ClickHouse là gì?</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&family=Fira+Code:wght@400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&display=swap"
         rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
@@ -37,29 +37,29 @@
             flex-direction: column;
         }
 
-        /* Ambient Shapes */
+        /* Decorative Background Shapes */
         .bg-shape-1 {
             position: absolute;
-            top: -100px;
-            left: -100px;
-            width: 700px;
-            height: 700px;
-            background-color: #065f46;
-            /* Emerald 800 */
+            top: -200px;
+            right: -100px;
+            width: 800px;
+            height: 800px;
+            background-color: #f59e0b;
+            /* Amber/Yellow for ClickHouse */
             filter: blur(120px);
             border-radius: 50%;
-            opacity: 0.2;
+            opacity: 0.15;
             z-index: 0;
         }
 
         .bg-shape-2 {
             position: absolute;
-            bottom: -150px;
-            right: -100px;
-            width: 600px;
-            height: 600px;
-            background-color: #b45309;
-            /* Amber 800 */
+            bottom: -200px;
+            left: -150px;
+            width: 700px;
+            height: 700px;
+            background-color: #dc2626;
+            /* Red logic */
             filter: blur(120px);
             border-radius: 50%;
             opacity: 0.15;
@@ -70,7 +70,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 30px 50px;
+            padding: 50px 80px;
             z-index: 10;
             height: 100%;
         }
@@ -79,186 +79,110 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            margin-bottom: 25px;
+            margin-bottom: 40px;
             border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 10px;
+            padding-bottom: 15px;
         }
 
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+        .main-layout {
+            display: flex;
+            gap: 40px;
             flex: 1;
-            align-items: start;
-            min-height: 0;
-            /* Important for scroll */
-            overflow-y: auto;
-            padding-right: 15px;
-            padding-bottom: 30px;
         }
 
-        /* Tùy chỉnh thanh cuộn cho đẹp với nền Dark */
-        .grid-layout::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .grid-layout::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
-        }
-
-        .grid-layout::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-        }
-
-        .grid-layout::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Code Cards */
-        .code-block {
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            position: relative;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+        .left-col {
+            flex: 1.2;
             display: flex;
             flex-direction: column;
-            height: 100%;
+            gap: 20px;
         }
 
-        .code-title {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            font-size: 16px;
-            margin-bottom: 8px;
-            color: #34d399;
-            /* Emerald 400 */
+        .right-col {
+            flex: 0.8;
             display: flex;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
         }
 
-        .code-title.amber {
-            color: #fbbf24;
-        }
-
-        .code-title.orange {
-            color: #f97316;
-        }
-
-        .code-title.blue {
-            color: #38bdf8;
-        }
-
-        pre {
-            font-family: 'Fira Code', monospace;
-            font-size: 13px;
-            line-height: 1.4;
-            color: #e2e8f0;
-            margin: 0;
-            overflow-x: auto;
-            flex: 1;
-        }
-
-        /* Syntax highlighting */
-        .kw {
-            color: #c678dd;
-            font-weight: bold;
-        }
-
-        /* Keyword */
-        .fn {
-            color: #61afef;
-        }
-
-        /* Function */
-        .dt {
-            color: #e5c07b;
-        }
-
-        /* DataType */
-        .sy {
-            color: #56b6c2;
-        }
-
-        /* Symbol */
-
-        /* Annotations bottom */
-        .annotation {
+        /* Information Cards */
+        .info-card {
             background: rgba(255, 255, 255, 0.05);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 13px;
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 6px solid #f59e0b;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .info-card:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .info-card.blue-border {
+            border-left-color: #3b82f6;
+        }
+
+        .icon-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .bg-amber-light {
+            background: rgba(245, 158, 11, 0.2);
+        }
+
+        .bg-blue-light {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .pill {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
             font-weight: 600;
-            color: #cbd5e1;
-            margin-top: 10px;
-            border-left: 3px solid #34d399;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         /* Right column items */
-        .target-card {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            margin-bottom: 20px;
-        }
-
-        .perf-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-            margin-top: 15px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .perf-table th {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            padding: 10px;
-            text-align: left;
-            font-weight: 700;
-        }
-
-        .perf-table td {
-            padding: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: #cbd5e1;
-        }
-
-        /* Flow Arrow */
-        .flow-arrow {
+        .example-item {
             display: flex;
-            justify-content: center;
-            color: #475569;
-            font-size: 20px;
-            margin: 5px 0;
-        }
-
-        .grid-left {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .grid-right {
-            display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 15px;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            transition: all 0.2s;
         }
 
-        /* Upgrade tip */
-        .pro-tip {
-            border: 1px dashed rgba(250, 204, 21, 0.4);
-            background: rgba(250, 204, 21, 0.05);
-            padding: 15px;
-            border-radius: 12px;
+        .example-item:hover {
+            background: rgba(245, 158, 11, 0.15);
+            transform: scale(1.02);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .example-item i {
+            font-size: 24px;
+            color: #fbd38d;
+            /* Yellow 200 */
         }
 
         /* Nav buttons */
@@ -308,129 +232,96 @@
             <div class="header-section">
                 <div>
                     <h1
-                        class="font-montserrat font-black text-5xl text-white tracking-tight mb-2 uppercase drop-shadow-md">
-                        <i class="fas fa-flask text-emerald-400 mr-2"></i> DEMO: Cơ chế Aggregating
+                        class="font-montserrat font-black text-6xl text-white tracking-tight mb-2 uppercase drop-shadow-md">
+                        Mở đầu: ClickHouse là gì?
                     </h1>
-                    <p class="font-open-sans text-lg text-emerald-300 font-semibold tracking-wide">
-                        DNS Log &rarr; Materialized View &rarr; AggregatingMergeTree
+                    <p class="font-open-sans text-xl text-amber-400 font-semibold tracking-wide">
+                        Khám phá sức mạnh của hệ quản trị cơ sở dữ liệu OLAP
                     </p>
+                </div>
+                <div class="text-amber-500 text-5xl opacity-80 pb-2">
+                    <i class="fas fa-database"></i>
                 </div>
             </div>
 
-            <div class="grid-layout">
-                <!-- Left Column (The Architecture / Schema) -->
-                <div class="grid-left">
-                    <!-- Step 1.1 -->
-                    <div class="code-block">
-                        <h3 class="code-title"><i class="fas fa-table"></i> 1.1 Raw table (log DNS)</h3>
-                        <pre><code><span class="kw">CREATE TABLE</span> dns_log (
-    timestamp <span class="dt">DateTime</span>,
-    client_ip <span class="dt">String</span>,
-    domain <span class="dt">String</span>,
-    rcode <span class="dt">UInt8</span>
-)
-<span class="kw">ENGINE</span> <span class="sy">=</span> MergeTree
-<span class="kw">ORDER BY</span> (domain, timestamp);</code></pre>
-                        <div class="annotation border-l-emerald-400 text-emerald-100">
-                            👉 Đây là table ingest log (append-only)
+            <div class="main-layout">
+                <!-- Left Column (Concepts) -->
+                <div class="left-col">
+                    <!-- Concept 1 -->
+                    <div class="info-card">
+                        <div class="icon-circle bg-amber-light text-amber-500">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-montserrat font-bold text-white mb-2">OLAP Database</h2>
+                            <p class="text-lg text-slate-300 mb-3">
+                                Hệ thống quản trị cơ sở dữ liệu tối ưu cho <strong>phân tích</strong>. Hoàn toàn khác
+                                biệt với các hệ thống OLTP truyền thống như MySQL hay Postgres.
+                            </p>
+                            <span class="pill text-red-300 border-red-400/30">OLAP (Phân tích dữ liệu)</span>
+                            <span class="pill text-slate-400 border-slate-500/30 line-through">OLTP (Sửa/Xóa giao dịch
+                                nhỏ)</span>
                         </div>
                     </div>
 
-                    <div class="flow-arrow"><i class="fas fa-arrow-down"></i></div>
-
-                    <!-- Step 1.2 MV -->
-                    <div class="code-block" style="border-color: rgba(249, 115, 22, 0.3)">
-                        <h3 class="code-title orange"><i class="fas fa-fire"></i> 1.2 Materialized View</h3>
-                        <pre><code><span class="kw">CREATE MATERIALIZED VIEW</span> mv_dns_agg
-<span class="kw">TO</span> dns_agg <span class="kw">AS</span>
-<span class="kw">SELECT</span>
-    domain,
-    <span class="fn">countState</span>() <span class="kw">AS</span> total_query,
-    <span class="fn">countIfState</span>(rcode <span class="sy">!=</span> 0) <span class="kw">AS</span> error_query
-<span class="kw">FROM</span> dns_log <span class="kw">GROUP BY</span> domain;</code></pre>
-                        <div class="annotation" style="border-left-color: #f97316; color: #ffedd5;">
-                            👉 Mỗi lần insert raw &rarr; MV kích hoạt &rarr; insert <strong>state</strong>
+                    <!-- Concept 2 -->
+                    <div class="info-card blue-border">
+                        <div class="icon-circle bg-blue-light text-blue-400">
+                            <i class="fas fa-bolt"></i>
                         </div>
-                    </div>
-
-                    <div class="flow-arrow"><i class="fas fa-arrow-down"></i></div>
-
-                    <!-- Step 1.3 Agg -->
-                    <div class="code-block" style="border-color: rgba(251, 191, 36, 0.3)">
-                        <h3 class="code-title amber"><i class="fas fa-bolt"></i> 1.3 Aggregation Table (Đích)</h3>
-                        <pre><code><span class="kw">CREATE TABLE</span> dns_agg (
-    domain <span class="dt">String</span>,
-    total_query <span class="dt">AggregateFunction</span>(count),
-    error_query <span class="dt">AggregateFunction</span>(countIf, <span class="dt">UInt8</span>)
-)
-<span class="kw">ENGINE</span> <span class="sy">=</span> AggregatingMergeTree()
-<span class="kw">ORDER BY</span> domain;</code></pre>
-                        <div class="annotation" style="border-left-color: #fbbf24; color: #fef3c7;">
-                            👉 Lưu <strong>state</strong> dạng nhị phân, không phải giá trị (value)
+                        <div>
+                            <h2 class="text-2xl font-montserrat font-bold text-white mb-2">Đặc điểm thiết kế & Điểm mạnh
+                            </h2>
+                            <div class="text-lg text-slate-300 leading-relaxed mb-3">
+                                <ul class="list-disc pl-5 space-y-1">
+                                    <li><span class="text-blue-300 font-semibold">Column-oriented:</span> Lưu trữ theo
+                                        dạng cột giúp việc scan siêu tốc.</li>
+                                    <li><span class="text-blue-300 font-semibold">Scalable:</span> Cực nhanh khi xử lý
+                                        dữ liệu từ <code
+                                            class="bg-black/30 px-2 py-0.5 rounded text-yellow-300">GB &rarr; TB &rarr; PB</code>.
+                                    </li>
+                                    <li><span class="text-blue-300 font-semibold">Tối ưu cho:</span> Analytics, Log
+                                        processing, Real-time aggregation.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Column (Goals, Queries, Insight) -->
-                <div class="grid-right">
+                <!-- Right Column (Use Cases) -->
+                <div class="right-col">
+                    <h3 class="text-2xl font-montserrat font-bold text-amber-400 mb-6 flex items-center">
+                        <i class="fas fa-lightbulb mr-3"></i> Ví dụ Thực tế
+                    </h3>
 
-                    <div class="target-card">
-                        <h3 class="font-montserrat font-bold text-xl text-white mb-3">
-                            <i class="fas fa-bullseye text-red-400 mr-2"></i> Mục tiêu
-                        </h3>
-                        <ul class="list-disc pl-5 text-slate-300 space-y-2">
-                            <li>Đếm số query theo <code class="text-amber-300">domain</code>.</li>
-                            <li>Đếm số lỗi (<code class="text-amber-300">rcode != 0</code>).</li>
-                            <li>Xây dựng Dashboard Realtime <span
-                                    class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded text-sm">(Query <
-                                        100ms)</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Step 1.4 -->
-                    <div class="code-block" style="height: auto; border-color: rgba(56, 189, 248, 0.3)">
-                        <h3 class="code-title blue"><i class="fas fa-chart-bar"></i> 1.4 Query Dashboard</h3>
-                        <pre><code><span class="kw">SELECT</span>
-    domain,
-    <span class="fn">countMerge</span>(total_query) <span class="kw">AS</span> total,
-    <span class="fn">countIfMerge</span>(error_query) <span class="kw">AS</span> errors
-<span class="kw">FROM</span> dns_agg
-<span class="kw">GROUP BY</span> domain <span class="kw">ORDER BY</span> total <span class="kw">DESC LIMIT</span> 10;</code></pre>
-                    </div>
-
-                    <!-- Step 1.5 Insight -->
-                    <div class="target-card" style="margin-bottom: 0;">
-                        <h3 class="font-montserrat font-bold text-xl text-white mb-2">
-                            <i class="fas fa-rocket text-sky-400 mr-2"></i> 1.5 Chuyện gì xảy ra phía sau?
-                        </h3>
-                        <div class="text-sm text-slate-300 mb-3 font-semibold pb-2 border-b border-slate-700">
-                            Insert log &rarr; MV transform &rarr; Lưu State &rarr; Background Merge &rarr; Query
+                    <div class="flex-1 flex flex-col justify-center">
+                        <div class="example-item">
+                            <div class="w-12 text-center"><i class="fas fa-globe"></i></div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white">Log DNS & HTTP</h4>
+                                <p class="text-sm text-slate-400">Lưu vết và phân tích traffic khổng lồ trên diện rộng
+                                    mạng</p>
+                            </div>
                         </div>
-                        <p class="text-sm text-emerald-300 font-bold mb-1"><i class="fas fa-chart-line"></i> Performance
-                            Insight:</p>
-                        <table class="perf-table">
-                            <tr>
-                                <th>Phương pháp</th>
-                                <th>Độ trễ</th>
-                            </tr>
-                            <tr>
-                                <td>GROUP BY trên Raw Log</td>
-                                <td><span class="text-red-400 font-bold">Chậm</span> (Scan toàn bộ)</td>
-                            </tr>
-                            <tr>
-                                <td>Dùng AggregatingMergeTree</td>
-                                <td><span class="text-emerald-400 font-bold">Rất nhanh</span> (Merge states)</td>
-                            </tr>
-                        </table>
 
-                        <div class="pro-tip mt-4 text-sm text-slate-300">
-                            <strong class="text-yellow-400"><i class="fas fa-lightbulb"></i> Pro Level:</strong> Thêm
-                            <code class="text-white">PARTITION BY toDate(timestamp)</code> để gom cụm theo ngày (phù hợp
-                            Log System).
+                        <div class="example-item">
+                            <div class="w-12 text-center"><i class="fas fa-heart-pulse"></i></div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white">Hệ thống Monitoring</h4>
+                                <p class="text-sm text-slate-400">Theo dõi metric và cảnh báo sự cố (như cấu trúc
+                                    Prometheus)</p>
+                            </div>
+                        </div>
+
+                        <div class="example-item">
+                            <div class="w-12 text-center"><i class="fas fa-chart-pie"></i></div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white">BI Dashboard</h4>
+                                <p class="text-sm text-slate-400">Business Intelligence hiển thị mọi cập nhật theo thời
+                                    gian thực</p>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -442,7 +333,7 @@
         </div>
     </div>
 
-    <!-- Navigation JS -->
+    <!-- Navigation Script -->
     <script>
         const slides = [
             "index.html", "slide1.html", "slide2.html", "slide3.html", "slide4.html",

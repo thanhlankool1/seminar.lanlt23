@@ -5,9 +5,9 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Bối Cảnh</title>
+    <title>Lợi ích AI/ChatGPT</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&amp;family=Open+Sans:wght@400;600&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&amp;family=Open+Sans:wght@400;600&amp;display=swap"
         rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
@@ -37,232 +37,236 @@
             transform-origin: center center;
         }
 
-        /* Decorative Background Shapes (Solid colors, no gradients) */
-        .shape-circle-1 {
+        /* Simulated Gradient via Shapes - No CSS Gradients allowed */
+        .bg-shape-1 {
             position: absolute;
-            top: -100px;
-            right: -100px;
-            width: 500px;
-            height: 500px;
-            background-color: #0f766e;
-            /* Teal 700 */
+            top: -250px;
+            right: -250px;
+            width: 900px;
+            height: 900px;
+            background-color: #065f46;
+            /* Emerald 800 */
+            filter: blur(80px);
             border-radius: 50%;
+            opacity: 0.2;
             z-index: 0;
+            filter: blur(80px);
         }
 
-        .shape-circle-2 {
+        .bg-shape-2 {
             position: absolute;
-            bottom: -50px;
-            left: -50px;
-            width: 300px;
-            height: 300px;
-            background-color: #1e3a8a;
-            /* Blue 900 */
+            bottom: -200px;
+            left: -200px;
+            width: 800px;
+            height: 800px;
+            background-color: #064e3b;
+            /* Emerald 900 */
+            filter: blur(80px);
             border-radius: 50%;
+            opacity: 0.6;
             z-index: 0;
+            filter: blur(60px);
         }
 
-        .shape-rect {
+        .bg-decoration-circle {
             position: absolute;
             top: 20%;
-            left: 45%;
-            width: 600px;
-            height: 400px;
-            background-color: #2dd4bf;
-            opacity: 0.1;
-            transform: rotate(-5deg);
-            border-radius: 30px;
-            z-index: 0;
-        }
-
-        /* Content Areas */
-        .content-wrapper {
-            flex: 1;
-            display: flex;
-            z-index: 10;
-            padding: 40px 60px;
-            gap: 40px;
-        }
-
-        .left-col {
-            flex: 1.1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .right-col {
-            flex: 0.9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        /* Card Styling */
-        .info-card {
-            background-color: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 14px;
-            padding: 16px 24px;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            border-left: 8px solid #38bdf8;
-            transition: transform 0.2s;
-        }
-
-        .info-card:hover {
-            transform: translateX(6px);
-            background-color: rgba(255, 255, 255, 0.08);
-        }
-
-        .info-card.python { border-left-color: #2dd4bf; }
-        .info-card.micro  { border-left-color: #38bdf8; }
-        .info-card.traffic{ border-left-color: #818cf8; }
-
-        .icon-box {
-            width: 52px;
-            height: 52px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 20px;
-            font-size: 22px;
-            flex-shrink: 0;
-        }
-
-        .icon-box.python  { background-color: rgba(45, 212, 191, 0.2); color: #5eead4; }
-        .icon-box.micro   { background-color: rgba(56, 189, 248, 0.2); color: #7dd3fc; }
-        .icon-box.traffic { background-color: rgba(129, 140, 248, 0.2); color: #a78bfa; }
-
-        /* Diagram Styling */
-        .diagram-container {
-            position: relative;
-            width: 340px;
-            height: 380px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .center-node {
-            width: 120px;
-            height: 120px;
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 3px solid #38bdf8;
+            left: 5%;
+            width: 50px;
+            height: 50px;
+            border: 4px solid #34d399;
+            /* Emerald 400 */
             border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 2;
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.15);
-        }
-
-        .satellite-node {
-            position: absolute;
-            width: 90px;
-            height: 90px;
-            background-color: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(5px);
-            border-radius: 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 2;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .node-top    { top: 0; border-bottom: 3px solid #2dd4bf; }
-        .node-bottom { bottom: 0; border-top: 3px solid #818cf8; }
-
-        .connector {
-            position: absolute;
-            background-color: rgba(255,255,255,0.15);
+            opacity: 0.2;
             z-index: 1;
         }
 
-        .connector-v {
-            width: 3px;
+        .bg-decoration-square {
+            position: absolute;
+            bottom: 15%;
+            right: 8%;
+            width: 80px;
+            height: 80px;
+            border: 4px solid #6ee7b7;
+            /* Emerald 300 */
+            border-radius: 12px;
+            opacity: 0.15;
+            transform: rotate(15deg);
+            z-index: 1;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 100px;
+            z-index: 10;
+        }
+
+        /* Header Styling */
+        .header-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 50px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 20px;
+        }
+
+        .title-icon {
+            font-size: 64px;
+            color: #34d399;
+            /* Emerald 400 */
+            margin-right: 30px;
+            background-color: rgba(255, 255, 255, 0.05);
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Benefits Card Container */
+        .benefits-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
             height: 100%;
-            left: 50%;
-            transform: translateX(-50%);
+        }
+
+        .benefit-card {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Card variations for subtle differences */
+        .card-1 {
+            border-top: 8px solid #34d399;
+        }
+
+        .card-2 {
+            border-top: 8px solid #6ee7b7;
+            margin-top: 20px;
+        }
+
+        /* Staggered */
+        .card-3 {
+            border-top: 8px solid #10b981;
+            margin-top: 40px;
+        }
+
+        /* Staggered */
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: rgba(52, 211, 153, 0.2);
+            color: #34d399;
+            /* Emerald 600 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .check-mark {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 24px;
+            height: 24px;
+            background-color: #34d399;
+            border-radius: 50%;
+            color: #064e3b;
+            font-size: 14px;
+            margin-right: 10px;
         }
     </style>
 </head>
 
 <body>
     <div class="slide-container">
-        <!-- Background Decorations -->
-        <div class="shape-circle-1"></div>
-        <div class="shape-circle-2"></div>
-        <div class="shape-rect"></div>
-        <!-- Main Content (full height flex row) -->
+        <!-- Background Elements -->
+        <div class="bg-shape-1"></div>
+        <div class="bg-shape-2"></div>
+        <div class="bg-decoration-circle"></div>
+        <div class="bg-decoration-square"></div>
+        <!-- Main Content -->
         <div class="content-wrapper">
-            <!-- Left Column: Header + Cards -->
-            <div class="left-col">
-                <div class="mb-6">
-                    <h1 class="font-montserrat font-bold text-6xl text-white tracking-tight leading-tight mb-2">
-                        Bối cảnh
+            <!-- Header -->
+            <div class="header-section">
+                <div class="title-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <h1
+                        class="font-montserrat font-black text-6xl text-white tracking-tight mb-2 uppercase drop-shadow-lg">
+                        AI hỗ trợ như thế nào
                     </h1>
-                    <div class="flex items-center space-x-3">
-                        <div class="h-1.5 w-16 bg-teal-400 rounded-full"></div>
-                        <p class="font-open-sans text-base text-teal-300 font-medium tracking-widest uppercase">Yêu cầu hệ thống</p>
-                    </div>
-                </div>
-                <!-- Card 1 -->
-                <div class="info-card python">
-                    <div class="icon-box python">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-montserrat font-bold text-xl text-white mb-1">Lưu lượng lớn</p>
-                        <p class="font-open-sans text-sm text-slate-300">Hệ thống tiếp nhận và xử lý lượng dữ liệu khổng lồ mỗi giây.</p>
-                    </div>
-                </div>
-                <!-- Card 2 -->
-                <div class="info-card micro">
-                    <div class="icon-box micro">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-montserrat font-bold text-xl text-white mb-1">Đa luồng</p>
-                        <p class="font-open-sans text-sm text-slate-300">Xử lý song song nhiều kết nối khách hàng cùng lúc.</p>
-                    </div>
-                </div>
-                <!-- Card 3 -->
-                <div class="info-card traffic">
-                    <div class="icon-box traffic">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-montserrat font-bold text-xl text-white mb-1">Truy xuất nhanh</p>
-                        <p class="font-open-sans text-sm text-slate-300">Dữ liệu luôn sẵn sàng để phân tích và truy vấn tức thì.</p>
-                    </div>
+                    <p class="font-open-sans text-xl text-emerald-200 font-semibold tracking-wide">
+                        Thúc đẩy quá trình chuyển đổi
+                    </p>
                 </div>
             </div>
-            <!-- Right Column: Visual Diagram -->
-            <div class="right-col">
-                <div class="diagram-container">
-                    <!-- Connectors -->
-                    <div class="connector connector-v"></div>
-                    <!-- Top Node -->
-                    <div class="satellite-node node-top">
-                        <i class="fas fa-globe text-2xl text-blue-400 mb-1"></i>
-                        <p class="font-bold text-xs text-slate-300">Lưu lượng</p>
+            <!-- Benefits Cards -->
+            <div class="benefits-container">
+                <!-- Card 1: Giải thích Khái niệm -->
+                <div class="benefit-card card-1">
+                    <div class="card-icon">
+                        <i class="fas fa-lightbulb"></i>
                     </div>
-                    <!-- Center Node -->
-                    <div class="center-node">
-                        <i class="fab fa-python text-4xl text-yellow-400 mb-1"></i>
-                        <p class="font-bold text-sm text-slate-200">Backend</p>
+                    <h2 class="font-montserrat font-bold text-2xl text-white mb-4">Tiếp cận nhanh công nghệ mới</h2>
+                    <p class="font-open-sans text-lg text-emerald-100 leading-relaxed">
+                        Sử dụng AI để học ngôn ngữ mới theo dạng Concept Mapping
+                    </p>
+                    <div class="mt-auto pt-4 w-full">
+                        <p class="text-sm font-mono bg-black bg-opacity-20 py-2 px-3 rounded text-emerald-300">
+                            <i class="fas fa-check mr-2"></i>Concept Mapping
+                        </p>
                     </div>
-                    <!-- Bottom Node -->
-                    <div class="satellite-node node-bottom">
-                        <i class="fas fa-database text-2xl text-emerald-400 mb-1"></i>
-                        <p class="font-bold text-xs text-slate-300">ClickHouse</p>
+                </div>
+                <!-- Card 2: Chuyển đổi Code -->
+                <div class="benefit-card card-2">
+                    <div class="card-icon">
+                        <i class="fas fa-code-branch"></i>
+                    </div>
+                    <h2 class="font-montserrat font-bold text-2xl text-white mb-4">Thực hiện tính năng</h2>
+                    <p class="font-open-sans text-lg text-emerald-100 leading-relaxed">
+                        Tự động hoàn thành các công việc cơ bản như CRUD
+                    </p>
+                    <div class="mt-auto pt-4 w-full">
+                        <p class="text-sm font-mono bg-black bg-opacity-20 py-2 px-3 rounded text-emerald-300">
+                            <i class="fas fa-check mr-2"></i>Junior Task
+                        </p>
+                    </div>
+                </div>
+                <!-- Card 3: Debug Fast -->
+                <div class="benefit-card card-3">
+                    <div class="card-icon">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h2 class="font-montserrat font-bold text-2xl text-white mb-4">Debug Nhanh</h2>
+                    <p class="font-open-sans text-lg text-emerald-100 leading-relaxed">
+                        Giúp mình định nghĩa được log lỗi đó thuộc nhóm nào
+                    </p>
+                    <div class="mt-auto pt-4 w-full">
+                        <p class="text-sm font-mono bg-black bg-opacity-20 py-2 px-3 rounded text-emerald-300">
+                            <i class="fas fa-check mr-2"></i>Định dạng và đề xuất
+                        </p>
                     </div>
                 </div>
             </div>
