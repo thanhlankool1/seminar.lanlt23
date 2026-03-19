@@ -49,7 +49,7 @@
         /* Header Styling */
         .slide-header {
             margin-bottom: 30px;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 20px;
         }
 
@@ -73,10 +73,12 @@
         .mapping-scroll-area::-webkit-scrollbar {
             width: 8px;
         }
+
         .mapping-scroll-area::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
         }
+
         .mapping-scroll-area::-webkit-scrollbar-thumb {
             background: #475569;
             border-radius: 10px;
@@ -92,14 +94,15 @@
             display: grid;
             grid-template-columns: 250px 1fr 1fr;
             align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: transform 0.2s;
         }
+
         .mapping-row:hover {
             transform: scale(1.02);
             background: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
         }
 
         .concept-label {
@@ -139,7 +142,6 @@
             margin-right: 8px;
             opacity: 0.6;
         }
-
     </style>
 </head>
 
@@ -171,7 +173,8 @@
                 <!-- Data Row 3 -->
                 <div class="mapping-row">
                     <div class="concept-label">Worker / Luồng</div>
-                    <div><span class="code-pill py-pill"><span class="pill-label">PY</span>queue + worker loop</span></div>
+                    <div><span class="code-pill py-pill"><span class="pill-label">PY</span>queue + worker loop</span>
+                    </div>
                     <div><span class="code-pill go-pill"><span class="pill-label">GO</span>goroutine pool</span></div>
                 </div>
 
@@ -186,7 +189,8 @@
                 <div class="mapping-row">
                     <div class="concept-label">Thời gian chờ</div>
                     <div><span class="code-pill py-pill"><span class="pill-label">PY</span>asyncio.wait_for</span></div>
-                    <div><span class="code-pill go-pill"><span class="pill-label">GO</span>context.WithTimeout</span></div>
+                    <div><span class="code-pill go-pill"><span class="pill-label">GO</span>context.WithTimeout</span>
+                    </div>
                 </div>
 
                 <!-- Data Row 6 -->
@@ -223,6 +227,7 @@
             display: flex;
             gap: 10px;
         }
+
         .nav-btn {
             background-color: rgba(0, 0, 0, 0.05);
             color: #ffffff;
@@ -236,6 +241,7 @@
             align-items: center;
             gap: 6px;
         }
+
         .nav-btn:hover {
             background-color: rgba(0, 0, 0, 0.1);
         }
@@ -249,21 +255,21 @@
         let currentFile = window.location.pathname.split('/').pop();
         if (!currentFile) currentFile = "index.html";
         let currentIndex = slides.indexOf(currentFile);
-        
+
         const prevBtn = document.getElementById("prevBtn");
         const nextBtn = document.getElementById("nextBtn");
-        
+
         if (currentIndex <= 0) prevBtn.disabled = true;
         if (currentIndex >= slides.length - 1 || currentIndex === -1) nextBtn.disabled = true;
-        
+
         prevBtn.addEventListener("click", () => {
             if (currentIndex > 0) window.location.href = slides[currentIndex - 1];
         });
-        
+
         nextBtn.addEventListener("click", () => {
             if (currentIndex > -1 && currentIndex < slides.length - 1) window.location.href = slides[currentIndex + 1];
         });
-        
+
         document.addEventListener("keydown", (e) => {
             if (e.key === "ArrowLeft" && currentIndex > 0) {
                 window.location.href = slides[currentIndex - 1];
