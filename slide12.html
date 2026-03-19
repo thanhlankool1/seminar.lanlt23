@@ -5,7 +5,9 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>DEMO: AggregatingMergeTree</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
     <style>
@@ -42,7 +44,8 @@
             left: -100px;
             width: 700px;
             height: 700px;
-            background-color: #065f46; /* Emerald 800 */
+            background-color: #065f46;
+            /* Emerald 800 */
             filter: blur(120px);
             border-radius: 50%;
             opacity: 0.2;
@@ -55,7 +58,8 @@
             right: -100px;
             width: 600px;
             height: 600px;
-            background-color: #b45309; /* Amber 800 */
+            background-color: #b45309;
+            /* Amber 800 */
             filter: blur(120px);
             border-radius: 50%;
             opacity: 0.15;
@@ -86,7 +90,8 @@
             gap: 30px;
             flex: 1;
             align-items: start;
-            min-height: 0; /* Important for scroll */
+            min-height: 0;
+            /* Important for scroll */
             overflow-y: auto;
             padding-right: 15px;
             padding-bottom: 30px;
@@ -96,14 +101,17 @@
         .grid-layout::-webkit-scrollbar {
             width: 8px;
         }
+
         .grid-layout::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 4px;
         }
+
         .grid-layout::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.2);
             border-radius: 4px;
         }
+
         .grid-layout::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.3);
         }
@@ -115,7 +123,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 15px;
             position: relative;
-            box-shadow: inset 0 2px 10px rgba(0,0,0, 0.2);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
             display: flex;
             flex-direction: column;
             height: 100%;
@@ -126,15 +134,24 @@
             font-weight: 700;
             font-size: 16px;
             margin-bottom: 8px;
-            color: #34d399; /* Emerald 400 */
+            color: #34d399;
+            /* Emerald 400 */
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .code-title.amber { color: #fbbf24; }
-        .code-title.orange { color: #f97316; }
-        .code-title.blue { color: #38bdf8; }
+        .code-title.amber {
+            color: #fbbf24;
+        }
+
+        .code-title.orange {
+            color: #f97316;
+        }
+
+        .code-title.blue {
+            color: #38bdf8;
+        }
 
         pre {
             font-family: 'Fira Code', monospace;
@@ -147,10 +164,27 @@
         }
 
         /* Syntax highlighting */
-        .kw { color: #c678dd; font-weight: bold; } /* Keyword */
-        .fn { color: #61afef; } /* Function */
-        .dt { color: #e5c07b; } /* DataType */
-        .sy { color: #56b6c2; } /* Symbol */
+        .kw {
+            color: #c678dd;
+            font-weight: bold;
+        }
+
+        /* Keyword */
+        .fn {
+            color: #61afef;
+        }
+
+        /* Function */
+        .dt {
+            color: #e5c07b;
+        }
+
+        /* DataType */
+        .sy {
+            color: #56b6c2;
+        }
+
+        /* Symbol */
 
         /* Annotations bottom */
         .annotation {
@@ -169,7 +203,7 @@
             background: rgba(255, 255, 255, 0.03);
             border-radius: 16px;
             padding: 20px;
-            border: 1px solid rgba(255,255,255,0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(10px);
             margin-bottom: 20px;
         }
@@ -179,13 +213,13 @@
             border-collapse: collapse;
             font-size: 14px;
             margin-top: 15px;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0, 0, 0, 0.2);
             border-radius: 8px;
             overflow: hidden;
         }
 
         .perf-table th {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
             padding: 10px;
             text-align: left;
@@ -194,7 +228,7 @@
 
         .perf-table td {
             padding: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             color: #cbd5e1;
         }
 
@@ -228,10 +262,38 @@
         }
 
         /* Nav buttons */
-        .nav-buttons { position: absolute; bottom: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px; }
-        .nav-btn { background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(5px); color: inherit; border: 1px solid rgba(255, 255, 255, 0.3); padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 16px; transition: all 0.3s; display: flex; align-items: center; gap: 8px; }
-        .nav-btn:hover { background-color: rgba(255, 255, 255, 0.4); }
-        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .nav-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            color: inherit;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 
@@ -245,7 +307,8 @@
         <div class="content-wrapper">
             <div class="header-section">
                 <div>
-                    <h1 class="font-montserrat font-black text-5xl text-white tracking-tight mb-2 uppercase drop-shadow-md">
+                    <h1
+                        class="font-montserrat font-black text-5xl text-white tracking-tight mb-2 uppercase drop-shadow-md">
                         <i class="fas fa-flask text-emerald-400 mr-2"></i> DEMO: Cơ chế Aggregating
                     </h1>
                     <p class="font-open-sans text-lg text-emerald-300 font-semibold tracking-wide">
@@ -275,7 +338,7 @@
 
                     <div class="flow-arrow"><i class="fas fa-arrow-down"></i></div>
 
-                    <!-- Step 1.3 MV -->
+                    <!-- Step 1.2 MV -->
                     <div class="code-block" style="border-color: rgba(249, 115, 22, 0.3)">
                         <h3 class="code-title orange"><i class="fas fa-fire"></i> 1.3 Materialized View</h3>
                         <pre><code><span class="kw">CREATE MATERIALIZED VIEW</span> mv_dns_agg
@@ -292,7 +355,7 @@
 
                     <div class="flow-arrow"><i class="fas fa-arrow-down"></i></div>
 
-                    <!-- Step 1.2 Agg -->
+                    <!-- Step 1.3 Agg -->
                     <div class="code-block" style="border-color: rgba(251, 191, 36, 0.3)">
                         <h3 class="code-title amber"><i class="fas fa-bolt"></i> 1.2 Aggregation Table (Đích)</h3>
                         <pre><code><span class="kw">CREATE TABLE</span> dns_agg (
@@ -310,7 +373,7 @@
 
                 <!-- Right Column (Goals, Queries, Insight) -->
                 <div class="grid-right">
-                    
+
                     <div class="target-card">
                         <h3 class="font-montserrat font-bold text-xl text-white mb-3">
                             <i class="fas fa-bullseye text-red-400 mr-2"></i> Mục tiêu
@@ -318,7 +381,10 @@
                         <ul class="list-disc pl-5 text-slate-300 space-y-2">
                             <li>Đếm số query theo <code class="text-amber-300">domain</code>.</li>
                             <li>Đếm số lỗi (<code class="text-amber-300">rcode != 0</code>).</li>
-                            <li>Xây dựng Dashboard Realtime <span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded text-sm">(Query < 100ms)</span></li>
+                            <li>Xây dựng Dashboard Realtime <span
+                                    class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded text-sm">(Query <
+                                        100ms)</span>
+                            </li>
                         </ul>
                     </div>
 
@@ -339,17 +405,29 @@
                             <i class="fas fa-rocket text-sky-400 mr-2"></i> 1.5 Chuyện gì xảy ra phía sau?
                         </h3>
                         <div class="text-sm text-slate-300 mb-3 font-semibold pb-2 border-b border-slate-700">
-                             Insert log &rarr; MV transform &rarr; Lưu State &rarr; Background Merge &rarr; Query
+                            Insert log &rarr; MV transform &rarr; Lưu State &rarr; Background Merge &rarr; Query
                         </div>
-                        <p class="text-sm text-emerald-300 font-bold mb-1"><i class="fas fa-chart-line"></i> Performance Insight:</p>
+                        <p class="text-sm text-emerald-300 font-bold mb-1"><i class="fas fa-chart-line"></i> Performance
+                            Insight:</p>
                         <table class="perf-table">
-                            <tr><th>Phương pháp</th><th>Độ trễ</th></tr>
-                            <tr><td>GROUP BY trên Raw Log</td><td><span class="text-red-400 font-bold">Chậm</span> (Scan toàn bộ)</td></tr>
-                            <tr><td>Dùng AggregatingMergeTree</td><td><span class="text-emerald-400 font-bold">Rất nhanh</span> (Merge states)</td></tr>
+                            <tr>
+                                <th>Phương pháp</th>
+                                <th>Độ trễ</th>
+                            </tr>
+                            <tr>
+                                <td>GROUP BY trên Raw Log</td>
+                                <td><span class="text-red-400 font-bold">Chậm</span> (Scan toàn bộ)</td>
+                            </tr>
+                            <tr>
+                                <td>Dùng AggregatingMergeTree</td>
+                                <td><span class="text-emerald-400 font-bold">Rất nhanh</span> (Merge states)</td>
+                            </tr>
                         </table>
-                        
+
                         <div class="pro-tip mt-4 text-sm text-slate-300">
-                            <strong class="text-yellow-400"><i class="fas fa-lightbulb"></i> Pro Level:</strong> Thêm <code class="text-white">PARTITION BY toDate(timestamp)</code> để gom cụm theo ngày (phù hợp Log System).
+                            <strong class="text-yellow-400"><i class="fas fa-lightbulb"></i> Pro Level:</strong> Thêm
+                            <code class="text-white">PARTITION BY toDate(timestamp)</code> để gom cụm theo ngày (phù hợp
+                            Log System).
                         </div>
                     </div>
 
