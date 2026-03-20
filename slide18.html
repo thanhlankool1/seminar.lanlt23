@@ -1,293 +1,325 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Q&A - Hỏi & Đáp</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&display=swap"
-        rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            font-family: 'Open Sans', sans-serif;
-            background-color: #0f172a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Seminar Wrap-up - Go + ClickHouse</title>
+	<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+		rel="stylesheet" />
+	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+	<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+	<style>
+		:root {
+			--bg-deep: #0b1220;
+			--bg-surface: #111b2f;
+			--card-bg: rgba(255, 255, 255, 0.06);
+			--card-border: rgba(255, 255, 255, 0.12);
+			--text-main: #f8fafc;
+			--text-soft: #cbd5e1;
+			--go: #14b8a6;
+			--clickhouse: #f59e0b;
+			--combine: #22c55e;
+			--insight: #38bdf8;
+		}
 
-        .slide-container {
-            width: 1280px;
-            height: 720px;
-            display: flex;
-            position: relative;
-            background-color: #1e293b;
-            color: white;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transform-origin: center center;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+		* {
+			box-sizing: border-box;
+		}
 
-        /* Ambient Shapes for Dark Glassmorphism */
-        .bg-shape-1 {
-            position: absolute;
-            top: -150px;
-            left: -150px;
-            width: 800px;
-            height: 800px;
-            background-color: #8b5cf6;
-            /* Violet */
-            filter: blur(160px);
-            border-radius: 50%;
-            opacity: 0.15;
-            z-index: 0;
-            animation: float1 10s infinite alternate ease-in-out;
-        }
+		body {
+			margin: 0;
+			width: 100vw;
+			height: 100vh;
+			overflow: hidden;
+			font-family: 'IBM Plex Sans', sans-serif;
+			background: radial-gradient(circle at 15% 20%, rgba(20, 184, 166, 0.18), transparent 40%),
+				radial-gradient(circle at 85% 80%, rgba(245, 158, 11, 0.15), transparent 42%),
+				linear-gradient(135deg, #070d18 0%, #0b1220 45%, #0f1a2e 100%);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			color: var(--text-main);
+		}
 
-        .bg-shape-2 {
-            position: absolute;
-            bottom: -200px;
-            right: -100px;
-            width: 900px;
-            height: 900px;
-            background-color: #0ea5e9;
-            /* Sky */
-            filter: blur(180px);
-            border-radius: 50%;
-            opacity: 0.15;
-            z-index: 0;
-            animation: float2 12s infinite alternate ease-in-out;
-        }
+		.slide-container {
+			width: 1280px;
+			height: 720px;
+			position: relative;
+			background: linear-gradient(145deg, rgba(17, 27, 47, 0.95), rgba(10, 19, 35, 0.98));
+			border: 1px solid rgba(148, 163, 184, 0.25);
+			border-radius: 18px;
+			overflow: hidden;
+			transform-origin: center center;
+			box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+		}
 
-        .bg-shape-3 {
-            position: absolute;
-            top: 20%;
-            right: 30%;
-            width: 500px;
-            height: 500px;
-            background-color: #f43f5e;
-            /* Rose */
-            filter: blur(150px);
-            border-radius: 50%;
-            opacity: 0.1;
-            z-index: 0;
-            animation: float3 15s infinite alternate ease-in-out;
-        }
+		.grain {
+			position: absolute;
+			inset: 0;
+			opacity: 0.12;
+			background-image: radial-gradient(rgba(255, 255, 255, 0.6) 0.7px, transparent 0.7px);
+			background-size: 4px 4px;
+			pointer-events: none;
+		}
 
-        @keyframes float1 {
-            0% {
-                transform: translate(0, 0);
-            }
+		.content {
+			position: relative;
+			z-index: 2;
+			height: 100%;
+			padding: 34px 44px 28px;
+			display: flex;
+			flex-direction: column;
+		}
 
-            100% {
-                transform: translate(50px, 50px);
-            }
-        }
+		.title {
+			font-family: 'Space Grotesk', sans-serif;
+			font-size: 46px;
+			font-weight: 700;
+			letter-spacing: -0.02em;
+			margin: 0;
+		}
 
-        @keyframes float2 {
-            0% {
-                transform: translate(0, 0);
-            }
+		.subtitle {
+			margin-top: 8px;
+			color: var(--text-soft);
+			font-size: 20px;
+			font-weight: 500;
+		}
 
-            100% {
-                transform: translate(-50px, -30px);
-            }
-        }
+		.summary-grid {
+			margin-top: 20px;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 14px;
+			flex: 1;
+		}
 
-        @keyframes float3 {
-            0% {
-                transform: translate(0, 0);
-            }
+		.card {
+			background: var(--card-bg);
+			border: 1px solid var(--card-border);
+			border-radius: 14px;
+			padding: 18px 20px;
+			backdrop-filter: blur(10px);
+			animation: riseIn 0.55s ease-out both;
+		}
 
-            100% {
-                transform: translate(-30px, 50px);
-            }
-        }
+		.card:nth-child(2) {
+			animation-delay: 0.08s;
+		}
 
-        .content-wrapper {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+		.card:nth-child(3) {
+			animation-delay: 0.16s;
+		}
 
-        .qa-title {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900;
-            font-size: 180px;
-            line-height: 1;
-            background: linear-gradient(135deg, #38bdf8 0%, #8b5cf6 50%, #f43f5e 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.5));
-            letter-spacing: -2px;
-        }
+		.card:nth-child(4) {
+			animation-delay: 0.24s;
+		}
 
-        .qa-subtitle {
-            font-family: 'Open Sans', sans-serif;
-            font-weight: 600;
-            font-size: 32px;
-            color: #cbd5e1;
-            margin-bottom: 40px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+		.capture-usecase {
+			grid-column: 1 / -1;
+		}
 
-        .thank-you-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            padding: 30px 60px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+		.card-head {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			font-family: 'Space Grotesk', sans-serif;
+			font-size: 28px;
+			font-weight: 700;
+			margin-bottom: 10px;
+		}
 
-        .thank-you-card i {
-            font-size: 40px;
-            color: #34d399;
-            /* Emerald 400 */
-        }
+		.badge {
+			width: 38px;
+			height: 38px;
+			border-radius: 10px;
+			display: grid;
+			place-items: center;
+			font-size: 18px;
+		}
 
-        .thank-you-text {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            font-size: 24px;
-            color: white;
-            text-align: left;
-        }
+		.go .badge {
+			color: #5eead4;
+			background: rgba(20, 184, 166, 0.22);
+			border: 1px solid rgba(20, 184, 166, 0.55);
+		}
 
-        .thank-you-sub {
-            font-size: 16px;
-            color: #94a3b8;
-            margin-top: 5px;
-            text-align: left;
-        }
+		.clickhouse .badge {
+			color: #fcd34d;
+			background: rgba(245, 158, 11, 0.2);
+			border: 1px solid rgba(245, 158, 11, 0.55);
+		}
 
-        /* Nav buttons */
-        .nav-buttons {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            gap: 10px;
-        }
+		.combine .badge {
+			color: #86efac;
+			background: rgba(34, 197, 94, 0.2);
+			border: 1px solid rgba(34, 197, 94, 0.55);
+		}
 
-        .nav-btn {
-            background-color: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(5px);
-            color: inherit;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+		.insight .badge {
+			color: #7dd3fc;
+			background: rgba(56, 189, 248, 0.2);
+			border: 1px solid rgba(56, 189, 248, 0.55);
+		}
 
-        .nav-btn:hover {
-            background-color: rgba(255, 255, 255, 0.4);
-        }
+		.points {
+			margin: 0;
+			padding-left: 18px;
+			color: var(--text-soft);
+			font-size: 17px;
+			line-height: 1.5;
+		}
 
-        .nav-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-    </style>
-    <link rel="stylesheet" href="statics/nav-uniform.css">
+		.points li {
+			margin-bottom: 3px;
+		}
+
+		.takeaway {
+			margin-top: 10px;
+			font-size: 18px;
+			font-weight: 600;
+			color: #ecfeff;
+		}
+
+		.nav-buttons {
+			position: absolute;
+			bottom: 20px;
+			right: 20px;
+			z-index: 1000;
+			display: flex;
+			gap: 10px;
+		}
+
+		.nav-btn {
+			background-color: rgba(255, 255, 255, 0.17);
+			color: inherit;
+			border: 1px solid rgba(255, 255, 255, 0.28);
+			padding: 10px 14px;
+			border-radius: 7px;
+			cursor: pointer;
+			font-size: 15px;
+			transition: all 0.25s;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			backdrop-filter: blur(6px);
+		}
+
+		.nav-btn:hover {
+			background-color: rgba(255, 255, 255, 0.28);
+		}
+
+		@keyframes riseIn {
+			from {
+				opacity: 0;
+				transform: translateY(14px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+	</style>
+	<link rel="stylesheet" href="statics/nav-uniform.css">
 </head>
 
 <body>
-    <div class="slide-container">
-        <!-- Ambient Shapes -->
-        <div class="bg-shape-1"></div>
-        <div class="bg-shape-2"></div>
-        <div class="bg-shape-3"></div>
+	<div class="slide-container">
+		<div class="grain"></div>
 
-        <div class="content-wrapper">
-            <h1 class="qa-title">Q&A</h1>
-            <p class="qa-subtitle">Thảo luận & Giải đáp</p>
+		<main class="content">
+			<header>
+				<h1 class="title">Go + ClickHouse mang lại gì?</h1>
+				<p class="subtitle">Tập trung vào giá trị thực tế: xử lý nhanh hơn, hiểu dữ liệu nhanh hơn.</p>
+			</header>
 
-            <div class="thank-you-card">
-                <i class="fas fa-heart text-rose-500"></i>
-                <div>
-                    <div class="thank-you-text">Cảm ơn mọi người đã lắng nghe!</div>
-                    <div class="thank-you-sub">Seminar System Architecture</div>
-                </div>
-            </div>
-        </div>
+			<section class="summary-grid">
+				<article class="card go">
+					<div class="card-head">
+						<div class="badge"><i class="fas fa-bolt"></i></div>
+						<span>Go</span>
+					</div>
+					<ul class="points">
+						<li>Giảm bớt nổi lo về hiệu năng</li>
+						<li>Service nhanh, gọn, dễ maintain</li>
+						<li>Concurrency cao với goroutine, channel</li>
+						<li>Phù hợp streaming, network, IO-heavy</li>
+						<li>Hiệu năng tốt, scale đơn giản</li>
+					</ul>
+					<p class="takeaway">Tóm lại: Go giúp build hệ thống xử lý dữ liệu nhanh và hiệu quả.</p>
+				</article>
 
-        <!-- Navigation Buttons -->
-        <div class="nav-buttons">
-            <button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i> Trước</button>
-            <button id="nextBtn" class="nav-btn">Hoàn thành <i class="fas fa-check-circle"></i></button>
-        </div>
-    </div>
+				<article class="card clickhouse">
+					<div class="card-head">
+						<div class="badge"><i class="fas fa-rocket"></i></div>
+						<span>ClickHouse</span>
+					</div>
+					<ul class="points">
+						<li>Tối ưu analytics trên dữ liệu lớn</li>
+						<li>Query aggregation nhanh với COUNT, GROUP BY</li>
+						<li>Hợp log, metrics, monitoring</li>
+						<li>Schema thiết kế theo query</li>
+					</ul>
+					<p class="takeaway">Tóm lại: ClickHouse giúp phân tích dữ liệu nhanh và đúng mục đích.</p>
+				</article>
 
-    <!-- Navigation JS -->
-    <script>
-        const slides = [
-            "index.html", "slide1.html", "slide2.html", "slide3.html", "slide4.html",
-            "slide5.html", "slide6.html", "slide7.html", "slide8.html", "slide9.html",
-            "slide10.html", "slide11.html", "slide13.html", "slide14.html", "slide15.html",
-            "slide16.html", "slide17.html", "slide18.html"
-        ];
-        let currentFile = window.location.pathname.split('/').pop();
-        if (!currentFile) currentFile = "index.html";
-        let currentIndex = slides.indexOf(currentFile);
+				<article class="card combine capture-usecase">
+					<div class="card-head">
+						<div class="badge"><i class="fas fa-link"></i></div>
+						<span>Use Case: Capture hệ thống + Report sức khỏe mạng realtime</span>
+					</div>
+					<ul class="points">
+						<li>Go thu thập packet flow, log thiết bị, và metrics từ router/switch/server theo thời gian thực</li>
+						<li>Luồng dữ liệu được chuẩn hóa, gắn timestamp, và stream liên tục để tránh mất tín hiệu sự cố</li>
+						<li>ClickHouse lưu trữ telemetry mạng khối lượng lớn và truy vấn tức thì theo cụm, khu vực, dịch vụ</li>
+						<li>Dashboard realtime hiển thị latency, packet loss, băng thông, và cảnh báo bất thường theo từng phút</li>
+						<li>Đội vận hành có thể khoanh vùng nguyên nhân nhanh và ra quyết định xử lý ngay trong lúc sự cố đang diễn ra</li>
+					</ul>
+					<p class="takeaway">Mục Tiêu: phát hiện bất và khoanh vùng nhanh, xử lý sự cố kịp thời và nâng độ ổn định toàn mạng.</p>
+				</article>
+			</section>
+		</main>
 
-        const prevBtn = document.getElementById("prevBtn");
-        const nextBtn = document.getElementById("nextBtn");
+		<div class="nav-buttons">
+			<button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i> Trước</button>
+			<button id="nextBtn" class="nav-btn">Tiếp <i class="fas fa-chevron-right"></i></button>
+		</div>
+	</div>
 
-        if (currentIndex <= 0) prevBtn.disabled = true;
-        if (currentIndex >= slides.length - 1 || currentIndex === -1) nextBtn.disabled = true;
+	<script>
+		const prevBtn = document.getElementById('prevBtn');
+		const nextBtn = document.getElementById('nextBtn');
 
-        prevBtn.addEventListener("click", () => {
-            if (currentIndex > 0) window.location.href = slides[currentIndex - 1];
-        });
+		prevBtn.addEventListener('click', () => {
+			window.location.href = 'slide17.html';
+		});
 
-        nextBtn.addEventListener("click", () => {
-            alert("Đã hoàn thành Seminar!");
-        });
+		nextBtn.addEventListener('click', () => {
+			window.location.href = 'slide19.html';
+		});
 
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "ArrowLeft" && currentIndex > 0) {
-                window.location.href = slides[currentIndex - 1];
-            }
-        });
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'ArrowLeft') {
+				window.location.href = 'slide17.html';
+			}
+			if (e.key === 'ArrowRight') {
+				window.location.href = 'slide19.html';
+			}
+		});
 
-        function resizeSlide() {
-            const container = document.querySelector('.slide-container');
-            if (container) {
-                const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
-                container.style.transform = `scale(${scale})`;
-            }
-        }
-        window.addEventListener('resize', resizeSlide);
-        resizeSlide();
-    </script>
-    <script src="statics/nav-uniform.js"></script>
+		function resizeSlide() {
+			const container = document.querySelector('.slide-container');
+			if (!container) return;
+			const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+			container.style.transform = `scale(${scale})`;
+		}
+
+		window.addEventListener('resize', resizeSlide);
+		resizeSlide();
+	</script>
+	<script src="statics/nav-uniform.js"></script>
 </body>
 
 </html>
